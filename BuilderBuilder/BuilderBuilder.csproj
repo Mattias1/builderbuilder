@@ -41,7 +41,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Parsers\Framework.cs" />
+    <Compile Include="Compilers\Compiler.cs" />
+    <Compile Include="Compilers\VipCompiler.cs" />
+    <Compile Include="Parsers\CsParser.cs" />
+    <Compile Include="Parsers\NhibernateParser.cs" />
+    <Compile Include="Framework.cs" />
+    <Compile Include="Parsers\Parser.cs" />
+    <Compile Include="BuilderEntity.cs" />
+    <Compile Include="Parsers\TestParser.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -73,5 +80,6 @@
   <ItemGroup>
     <None Include="Resources\EyesHybrid.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

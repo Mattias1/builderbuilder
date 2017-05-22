@@ -7,11 +7,11 @@ namespace BuilderBuilder
     {
         protected override string Name => "BuilderBuilder";
 
-        public static Settings Get => SettingsSingleton.GetSingleton<Settings>();
+        public static Settings Get => GetSingleton<Settings>();
 
         public Framework SelectedFramework {
-            get { return Frameworks.FromSlug(this.get("selected-framework", Frameworks.All.First().Slug)); }
-            set { this.set("selected-framework", value.Slug); }
+            get { return Frameworks.FromSlug(get("selected-framework", Frameworks.All.First().Slug)); }
+            set { set("selected-framework", value.Slug); }
         }
     }
 }

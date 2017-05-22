@@ -5,41 +5,56 @@ namespace BuilderBuilder
 {
     class MainControl : MattyUserControl
     {
-        Db dbFramework;
-        Tb tbInput, tbOutput;
+        private Db _dbFramework;
+        private RichTb _tbInput, _tbOutput;
 
         public MainControl() {
-            this.dbFramework = new Db(this);
+            _dbFramework = new Db(this);
+            _dbFramework.SelectedIndexChanged += OnFrameworkChange;
             foreach (var framework in Frameworks.All) {
-                this.dbFramework.Items.Add(framework.Name);
+                _dbFramework.Items.Add(framework.Name);
             }
-            this.dbFramework.SelectedIndex = Frameworks.IndexOf(Settings.Get.SelectedFramework);
+            _dbFramework.SelectedIndex = Frameworks.IndexOf(Settings.Get.SelectedFramework);
 
-            this.tbInput = new Tb(this);
-            this.tbInput.Multiline = true;
-            this.tbInput.AddLabel("Input:", false);
+            _tbInput = new RichTb(this);
+            _tbInput.Multiline = true;
+            _tbInput.TextChanged += OnInputChange;
+            _tbInput.AddLabel("Input:", false);
 
-            this.tbOutput = new Tb(this);
-            this.tbOutput.Multiline = true;
-            this.tbOutput.AddLabel("Output:", false);
+            _tbOutput = new RichTb(this);
+            _tbOutput.Multiline = true;
+            _tbOutput.AddLabel("Output:", false);
         }
 
         public override void OnResize() {
-            this.dbFramework.PositionTopRightInside(this);
+            _dbFramework.PositionTopRightInside(this);
 
-            this.tbInput.PositionBottomLeftInside(this);
-            this.tbInput.StretchRightFixed(this.Width / 2 - MattyControl.Distance - this.tbInput.Width);
-            this.tbInput.StretchUpTo(this.dbFramework);
-            this.tbInput.Label.PositionAbove(this.tbInput);
+            _tbInput.PositionBottomLeftInside(this);
+            _tbInput.StretchRightFixed(Width / 2 - MattyControl.Distance - _tbInput.Width);
+            _tbInput.StretchUpTo(_dbFramework);
+            _tbInput.Label.PositionAbove(_tbInput);
 
-            this.tbOutput.PositionRightOf(this.tbInput);
-            this.tbOutput.StretchRightInside(this);
-            this.tbOutput.StretchDownInside(this);
-            this.tbOutput.Label.PositionAbove(this.tbOutput);
+            _tbOutput.PositionRightOf(_tbInput);
+            _tbOutput.StretchRightInside(this);
+            _tbOutput.StretchDownInside(this);
+            _tbOutput.Label.PositionAbove(_tbOutput);
         }
 
         public override void OnShow() {
-            this.tbInput.Select();
+            _tbInput.Select();
+        }
+
+        private void OnFrameworkChange(object o, EventArgs e) {
+            Settings.Get.SelectedFramework = Frameworks.All[_dbFramework.SelectedIndex];
+        }
+
+        private void OnInputChange(object o, EventArgs e) {
+            _tbOutput.Text = BuildBuilder(_tbInput.Text, Settings.Get.SelectedFramework);
+        }
+
+        public static string BuildBuilder(string input, Framework framework) {
+            BuilderEntity entity = framework.Parser.Parse(input);
+            return framework.Compiler.Compile(entity);
         }
     }
 }
