@@ -1,6 +1,6 @@
 ﻿namespace BuilderBuilder
 {
-    class NhibernateParser : CsParser
+    public class NhibernateParser : CsParser
     {
         private BuilderEntity _result;
 

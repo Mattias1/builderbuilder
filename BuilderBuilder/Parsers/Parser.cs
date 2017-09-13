@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace BuilderBuilder
 {
-    abstract class Parser
+    public abstract class Parser
     {
         public virtual BuilderEntity Parse(string input) => Parse(SplitLines(input));
 

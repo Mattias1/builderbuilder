@@ -2,7 +2,7 @@
 
 namespace BuilderBuilder
 {
-    class BuilderEntity
+    public class BuilderEntity
     {
         public string Name { get; set; }
 
@@ -13,7 +13,7 @@ namespace BuilderBuilder
         }
     }
 
-    struct Field
+    public struct Field
     {
         public string Type;
         public string Name;

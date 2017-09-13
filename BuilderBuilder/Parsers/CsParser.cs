@@ -1,6 +1,6 @@
 ﻿namespace BuilderBuilder
 {
-    abstract class CsParser : Parser
+    public abstract class CsParser : Parser
     {
         private const string ATTRIBUTE_INSIDE = @"\s*[a-zA-Z_].*";
 
