@@ -51,7 +51,7 @@
         <PropertyValue name="NewLines_Braces_LambdaExpressionBody">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Method">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_ObjectInitializer">0</PropertyValue>
-        <PropertyValue name="NewLines_Braces_Property">1</PropertyValue>
+        <PropertyValue name="NewLines_Braces_Property">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Type">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Catch">1</PropertyValue>
         <PropertyValue name="NewLines_Keywords_Else">1</PropertyValue>

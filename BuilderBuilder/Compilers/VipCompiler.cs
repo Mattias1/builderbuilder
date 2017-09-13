@@ -1,8 +1,6 @@
-﻿using System.Text;
-
-namespace BuilderBuilder
+﻿namespace BuilderBuilder
 {
-    class VipCompiler : Compiler
+    public class VipCompiler : Compiler
     {
         private string EntityClass => BuilderEntity.Name;
         private string BuilderClass => EntityClass + "Builder";
@@ -15,7 +13,6 @@ namespace BuilderBuilder
             openBuilderClass();
             initBuilderClass();
 
-            addField(new Field("long?", "Id"));
             foreach (Field field in BuilderEntity.Fields) {
                 addField(field);
             }

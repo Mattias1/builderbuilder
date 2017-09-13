@@ -2,7 +2,7 @@
 
 namespace BuilderBuilder
 {
-    abstract class Compiler
+    public abstract class Compiler
     {
         public virtual int TabSize => 4;
 
@@ -11,6 +11,7 @@ namespace BuilderBuilder
         protected BuilderEntity BuilderEntity { get; set; }
 
         protected StringBuilder StringBuilder { get; set; }
+
         private int _indent;
 
         public virtual string Compile(BuilderEntity entity) {
@@ -56,6 +57,9 @@ namespace BuilderBuilder
         }
 
         protected string LocalVar(string name) {
+            if (string.IsNullOrEmpty(name)) {
+                return "";
+            }
             return char.ToLowerInvariant(name[0]) + name.Substring(1);
         }
 

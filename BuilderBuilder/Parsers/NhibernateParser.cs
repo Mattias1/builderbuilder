@@ -20,18 +20,25 @@
         private void parseName(string[] lines, int i, string line) {
             const string classPattern = @"^\s*public\s+class\s+(\w+)";
 
+            if (_result.Name == null) {
+                _result.Name = "";
+            }
             if (MatchesPattern(line, classPattern) && LineHasAttribute(lines, i, "Class")) {
                 _result.Name = GetPatternMatch(line, classPattern);
             }
         }
 
         private void parseField(string[] lines, int i, string line) {
-            const string fieldPattern = @"public\s+virtual\s+(\w+)\s+(\w+)\s*\{\s*get;\s*set;\s*\}";
+            const string fieldPattern = @"public\s+virtual\s+(\w+\??)\s+(\w+)\s*\{\s*get;\s*set;\s*\}";
 
-            if (MatchesPattern(line, fieldPattern) && LineHasAttribute(lines, i, "Property")) {
+            if (MatchesPattern(line, fieldPattern) && LineHasParsableAttribute(lines, i)) {
                 string[] values = GetPatternMatches(line, fieldPattern);
                 _result.Fields.Add(new Field(values[0], values[1]));
             }
+        }
+
+        private bool LineHasParsableAttribute(string[] lines, int i) {
+            return LineHasAttribute(lines, i, "Property") || LineHasAttribute(lines, i, "Id");
         }
     }
 }
