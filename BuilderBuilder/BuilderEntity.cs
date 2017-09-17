@@ -9,6 +9,7 @@ namespace BuilderBuilder
         public List<Field> Fields { get; private set; }
 
         public BuilderEntity() {
+            Name = "";
             Fields = new List<Field>();
         }
     }

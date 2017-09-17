@@ -1,6 +1,6 @@
 ﻿namespace BuilderBuilder
 {
-    public class NhibernateParser : CsParser
+    public class PlainCsClassParser : CsParser
     {
         private BuilderEntity _result;
 
@@ -18,22 +18,18 @@
         }
 
         private void parseName(string[] lines, int i, string line) {
-            const string classPattern = @"^\s*public\s+class\s+(\w+)";
+            const string classPattern = @"^\s*(?:public\s+)?class\s+(\w+)";
 
-            if (MatchesPattern(line, classPattern) && LineHasAttribute(lines, i, "Class")) {
+            if (MatchesPattern(line, classPattern)) {
                 _result.Name = GetPatternMatch(line, classPattern);
             }
         }
 
         private void parseField(string[] lines, int i, string line) {
-            var field = ParsePublicVirtualField(line);
-            if (field != null && LineHasParsableAttribute(lines, i)) {
+            var field = ParsePublicField(line);
+            if (field != null) {
                 _result.Fields.Add(new Field(field.Value.type, field.Value.name));
             }
-        }
-
-        private bool LineHasParsableAttribute(string[] lines, int i) {
-            return LineHasAttribute(lines, i, "Property") || LineHasAttribute(lines, i, "Id");
         }
     }
 }

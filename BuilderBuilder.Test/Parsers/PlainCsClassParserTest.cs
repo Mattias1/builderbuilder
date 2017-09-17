@@ -4,16 +4,16 @@ using System.Linq;
 namespace BuilderBuilder.Test
 {
     [TestClass]
-    public class NhibernateParserTest
+    public class PlainCsClassParserTest
     {
-        private Parser Parser => new NhibernateParser();
+        private Parser Parser => new PlainCsClassParser();
 
         [TestMethod]
         public void Parse_Example() {
             BuilderEntity result = Parser.Parse(ExampleInput);
 
             AssertHelper.AssertBuilderEntity(result, "ExampleEntity",
-                ("long?", "Id"), ("string", "Name"), ("My_class_123", "My_name_123"));
+                ("long?", "Id"), ("My_class_123", "My_name_123"), ("IEnumerable<Stuff>", "Stuffs"));
         }
 
         private string ExampleInput {
@@ -22,19 +22,13 @@ namespace BuilderBuilder.Test
 
                 namespace ...
                 {
-                    [Class]
                     public class ExampleEntity
                     {
-                        [Id]
-                        public virtual long? Id { get; set; }
+                        public long? Id;
 
-                        [Property]
-                        public virtual string Name { get; set; }
+                        [JsonProperty(""Name_123"")]
+                        public My_class_123 My_name_123 { get; set; }
 
-                        [Property(Name = ""Name_123"")]
-                        public virtual My_class_123 My_name_123 { get; set; }
-
-                        [ManyToMany]
                         public virtual IEnumerable<Stuff> Stuffs { get; set; }
 
                         public virtual int IgnoreMe()

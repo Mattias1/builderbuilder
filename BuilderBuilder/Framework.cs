@@ -9,13 +9,14 @@ namespace BuilderBuilder
 
         private static Framework[] BuildFrameworks() {
             _frameworks = new Framework[] {
-                new Framework("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler())
+                new Framework("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler()),
+                new Framework("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler())
             };
             return _frameworks;
         }
 
         public static Framework FromSlug(string slug) {
-            return All.First(f => f.Slug == slug);
+            return All.FirstOrDefault(f => f.Slug == slug) ?? All.First();
         }
 
         public static int IndexOf(Framework framework) {

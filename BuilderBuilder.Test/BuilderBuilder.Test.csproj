@@ -51,10 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssertHelper.cs" />
     <Compile Include="Compilers\VipCompilerTest.cs" />
     <Compile Include="Parsers\CsParserTest.cs" />
     <Compile Include="Parsers\NhibernateParserTest.cs" />
     <Compile Include="Parsers\ParserTest.cs" />
+    <Compile Include="Parsers\PlainCsClassParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
