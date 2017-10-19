@@ -5,14 +5,13 @@ namespace BuilderBuilder
     class Frameworks
     {
         private static Framework[] _frameworks;
-        public static Framework[] All = _frameworks ?? BuildFrameworks();
+        public static Framework[] All => _frameworks ?? BuildFrameworks();
 
         private static Framework[] BuildFrameworks() {
-            _frameworks = new Framework[] {
+            return _frameworks = new Framework[] {
                 new Framework("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler()),
                 new Framework("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler())
             };
-            return _frameworks;
         }
 
         public static Framework FromSlug(string slug) {

@@ -28,12 +28,47 @@
         private void parseField(string[] lines, int i, string line) {
             var field = ParsePublicVirtualField(line);
             if (field != null && LineHasParsableAttribute(lines, i)) {
-                _result.Fields.Add(new Field(field.Value.type, field.Value.name));
+                var inverseType = Field.InverseHandlingType.None;
+
+                if (LineHasOneToOneAttribute(lines, i)) {
+                    inverseType = Field.InverseHandlingType.OneToOne;
+                }
+                if (LineHasManyToOneAttribute(lines, i)) {
+                    inverseType = Field.InverseHandlingType.ManyToOne;
+                }
+                if (LineHasOneToManyAttribute(lines, i)) {
+                    inverseType = Field.InverseHandlingType.OneToMany;
+                }
+                if (LineHasManyToManyAttribute(lines, i)) {
+                    inverseType = Field.InverseHandlingType.ManyToMany;
+                }
+
+                _result.Fields.Add(new Field(field.Value.type, field.Value.name, inverseType));
             }
         }
 
         private bool LineHasParsableAttribute(string[] lines, int i) {
+            return LineHasNormalAttribute(lines, i)
+                || LineHasOneToOneAttribute(lines, i)
+                || LineHasManyToOneAttribute(lines, i)
+                || LineHasOneToManyAttribute(lines, i)
+                || LineHasManyToManyAttribute(lines, i);
+        }
+
+        private bool LineHasNormalAttribute(string[] lines, int i) {
             return LineHasAttribute(lines, i, "Property") || LineHasAttribute(lines, i, "Id");
+        }
+        private bool LineHasOneToOneAttribute(string[] lines, int i) {
+            return LineHasAttribute(lines, i, "OneToOne");
+        }
+        private bool LineHasManyToOneAttribute(string[] lines, int i) {
+            return LineHasAttribute(lines, i, "ManyToOne");
+        }
+        private bool LineHasOneToManyAttribute(string[] lines, int i) {
+            return LineHasAttribute(lines, i, "OneToMany");
+        }
+        private bool LineHasManyToManyAttribute(string[] lines, int i) {
+            return LineHasAttribute(lines, i, "ManyToMany");
         }
     }
 }

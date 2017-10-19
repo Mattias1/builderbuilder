@@ -8,11 +8,16 @@ namespace BuilderBuilder.Test
     static class AssertHelper
     {
         public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name)[] fields) {
+            var fieldsWithInverseType = fields.Select(t => (t.type, t.name, Field.InverseHandlingType.None)).ToArray();
+            AssertBuilderEntity(entityResult, name, fieldsWithInverseType);
+        }
+
+        public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name, Field.InverseHandlingType inverse)[] fields) {
             Assert.AreEqual(name, entityResult.Name);
 
-            var expectedFields = fields.Select(t => new Field(t.type, t.name));
+            var expectedFields = fields.Select(t => new Field(t.type, t.name, t.inverse));
 
-            AssertHelper.List(entityResult.Fields, f => $"{f.Type} {f.Name}", expectedFields);
+            AssertHelper.ListEq(entityResult.Fields, f => $"{f.Type} {f.Name} {f.InverseHandling}", expectedFields);
         }
 
         public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
@@ -39,7 +44,7 @@ namespace BuilderBuilder.Test
             }
 
             if (shouldHaves.Count > 0 || shouldntHaves.Count > 0) {
-                Assert.Fail(ErrorList("Should haves", shouldHaves) + " " + ErrorList("Shouldn't haves", shouldntHaves));
+                Assert.Fail(ErrorList("Should haves", shouldHaves) + ". " + ErrorList("Shouldn't haves", shouldntHaves));
             }
         }
 

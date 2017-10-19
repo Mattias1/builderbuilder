@@ -16,12 +16,16 @@ namespace BuilderBuilder
 
     public struct Field
     {
+        public enum InverseHandlingType { None, OneToOne, OneToMany, ManyToOne, ManyToMany };
+
         public string Type;
         public string Name;
+        public InverseHandlingType InverseHandling;
 
-        public Field(string type, string name) {
+        public Field(string type, string name, InverseHandlingType inverseHandling = InverseHandlingType.None) {
             Type = type;
             Name = name;
+            InverseHandling = inverseHandling;
         }
     }
 }

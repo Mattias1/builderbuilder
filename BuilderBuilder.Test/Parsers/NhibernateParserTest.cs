@@ -13,7 +13,14 @@ namespace BuilderBuilder.Test
             BuilderEntity result = Parser.Parse(ExampleInput);
 
             AssertHelper.AssertBuilderEntity(result, "ExampleEntity",
-                ("long?", "Id"), ("string", "Name"), ("My_class_123", "My_name_123"));
+                ("long?", "Id", Field.InverseHandlingType.None),
+                ("string", "Name", Field.InverseHandlingType.None),
+                ("My_class_123", "My_name_123", Field.InverseHandlingType.None),
+                ("Brother", "Twin", Field.InverseHandlingType.OneToOne),
+                ("Parent", "Mom", Field.InverseHandlingType.ManyToOne),
+                ("IEnumerable<Child>", "Kids", Field.InverseHandlingType.OneToMany),
+                ("IEnumerable<Parent>", "Parents", Field.InverseHandlingType.ManyToMany)
+            );
         }
 
         private string ExampleInput {
@@ -34,8 +41,17 @@ namespace BuilderBuilder.Test
                         [Property(Name = ""Name_123"")]
                         public virtual My_class_123 My_name_123 { get; set; }
 
+                        [OneToOne]
+                        public virtual Brother Twin { get; set; }
+
+                        [ManyToOne]
+                        public virtual Parent Mom { get; set; }
+
+                        [OneToMany]
+                        public virtual IEnumerable<Child> Kids { get; set; }
+
                         [ManyToMany]
-                        public virtual IEnumerable<Stuff> Stuffs { get; set; }
+                        public virtual IEnumerable<Parent> Parents { get; set; }
 
                         public virtual int IgnoreMe()
                         {
