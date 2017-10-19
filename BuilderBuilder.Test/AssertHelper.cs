@@ -15,26 +15,26 @@ namespace BuilderBuilder.Test
             AssertHelper.List(entityResult.Fields, f => $"{f.Type} {f.Name}", expectedFields);
         }
 
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
-            List(result, compareBy, expected.AsEnumerable());
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
+            ListEq(result, compareBy, expected.AsEnumerable());
         }
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params C[] expected) {
-            List(result, compareBy, expected.AsEnumerable());
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params C[] expected) {
+            ListEq(result, compareBy, expected.AsEnumerable());
         }
-        public static void List<T>(IEnumerable<T> result, params T[] expected) {
-            List(result, expected.AsEnumerable());
+        public static void ListEq<T>(IEnumerable<T> result, params T[] expected) {
+            ListEq(result, expected.AsEnumerable());
         }
 
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<T> expected) {
-            List(result.Select(compareBy), expected.Select(compareBy));
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<T> expected) {
+            ListEq(result.Select(compareBy), expected.Select(compareBy));
         }
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<C> expected) {
-            List(result.Select(compareBy), expected);
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<C> expected) {
+            ListEq(result.Select(compareBy), expected);
         }
-        public static void List<T>(IEnumerable<T> result, IEnumerable<T> expected) {
+        public static void ListEq<T>(IEnumerable<T> result, IEnumerable<T> expected) {
             List<T> shouldHaves = Missing(result, expected);
             List<T> shouldntHaves = new List<T>();
-            if (result.Count() + shouldHaves.Count < expected.Count()) {
+            if (result.Count() + shouldHaves.Count != expected.Count()) {
                 shouldntHaves = Missing(expected, result);
             }
 
