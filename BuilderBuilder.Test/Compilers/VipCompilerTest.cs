@@ -14,6 +14,10 @@ namespace BuilderBuilder.Test
             input.Name = "ExampleEntity";
             input.Fields.Add(new Field("long?", "Id"));
             input.Fields.Add(new Field("string", "Name"));
+            input.Fields.Add(new Field("Brother", "Twin", Field.InverseHandlingType.OneToOne));
+            input.Fields.Add(new Field("Parent", "Mom", Field.InverseHandlingType.ManyToOne));
+            input.Fields.Add(new Field("List<Child>", "Kids", Field.InverseHandlingType.OneToMany));
+            input.Fields.Add(new Field("List<Parent>", "Parents", Field.InverseHandlingType.ManyToMany));
 
             string result = Compiler.Compile(input);
 
@@ -54,6 +58,37 @@ namespace BuilderBuilder.Test
                             public ExampleEntityBuilder WithName(string name)
                             {
                                 _exampleEntity.Name = name;
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithTwin(Brother twin)
+                            {
+                                _exampleEntity.Twin = twin;
+                                twin.ExampleEntity = _exampleEntity;
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithMom(Parent mom)
+                            {
+                                _exampleEntity.Mom = mom;
+                                mom.ExampleEntitys.Add(_exampleEntity);
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithKids(List<Child> kids)
+                            {
+                                _exampleEntity.Kids = kids;
+                                foreach (var obj in kids)
+                                {
+                                    obj.ExampleEntity = _exampleEntity;
+                                }
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithParents(List<Parent> parents)
+                            {
+                                _exampleEntity.Parents = parents;
+                                parents.ExampleEntitys.Add(_exampleEntity);
                                 return this;
                             }
 

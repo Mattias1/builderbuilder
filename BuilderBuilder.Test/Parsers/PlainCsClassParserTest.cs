@@ -13,7 +13,9 @@ namespace BuilderBuilder.Test
             BuilderEntity result = Parser.Parse(ExampleInput);
 
             AssertHelper.AssertBuilderEntity(result, "ExampleEntity",
-                ("long?", "Id"), ("My_class_123", "My_name_123"), ("IEnumerable<Stuff>", "Stuffs"));
+                ("long?", "Id"),
+                ("My_class_123", "My_name_123"),
+                ("IEnumerable<Stuff>", "Stuffs"));
         }
 
         private string ExampleInput {

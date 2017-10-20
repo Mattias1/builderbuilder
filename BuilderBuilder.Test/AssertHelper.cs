@@ -8,38 +8,43 @@ namespace BuilderBuilder.Test
     static class AssertHelper
     {
         public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name)[] fields) {
+            var fieldsWithInverseType = fields.Select(t => (t.type, t.name, Field.InverseHandlingType.None)).ToArray();
+            AssertBuilderEntity(entityResult, name, fieldsWithInverseType);
+        }
+
+        public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name, Field.InverseHandlingType inverse)[] fields) {
             Assert.AreEqual(name, entityResult.Name);
 
-            var expectedFields = fields.Select(t => new Field(t.type, t.name));
+            var expectedFields = fields.Select(t => new Field(t.type, t.name, t.inverse));
 
-            AssertHelper.List(entityResult.Fields, f => $"{f.Type} {f.Name}", expectedFields);
-        }
-
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
-            List(result, compareBy, expected.AsEnumerable());
-        }
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params C[] expected) {
-            List(result, compareBy, expected.AsEnumerable());
-        }
-        public static void List<T>(IEnumerable<T> result, params T[] expected) {
-            List(result, expected.AsEnumerable());
+            AssertHelper.ListEq(entityResult.Fields, f => $"{f.Type} {f.Name} {f.InverseHandling}", expectedFields);
         }
 
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<T> expected) {
-            List(result.Select(compareBy), expected.Select(compareBy));
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
+            ListEq(result, compareBy, expected.AsEnumerable());
         }
-        public static void List<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<C> expected) {
-            List(result.Select(compareBy), expected);
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params C[] expected) {
+            ListEq(result, compareBy, expected.AsEnumerable());
         }
-        public static void List<T>(IEnumerable<T> result, IEnumerable<T> expected) {
+        public static void ListEq<T>(IEnumerable<T> result, params T[] expected) {
+            ListEq(result, expected.AsEnumerable());
+        }
+
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<T> expected) {
+            ListEq(result.Select(compareBy), expected.Select(compareBy));
+        }
+        public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<C> expected) {
+            ListEq(result.Select(compareBy), expected);
+        }
+        public static void ListEq<T>(IEnumerable<T> result, IEnumerable<T> expected) {
             List<T> shouldHaves = Missing(result, expected);
             List<T> shouldntHaves = new List<T>();
-            if (result.Count() + shouldHaves.Count < expected.Count()) {
+            if (result.Count() + shouldHaves.Count != expected.Count()) {
                 shouldntHaves = Missing(expected, result);
             }
 
             if (shouldHaves.Count > 0 || shouldntHaves.Count > 0) {
-                Assert.Fail(ErrorList("Should haves", shouldHaves) + " " + ErrorList("Shouldn't haves", shouldntHaves));
+                Assert.Fail(ErrorList("Should haves", shouldHaves) + ". " + ErrorList("Shouldn't haves", shouldntHaves));
             }
         }
 

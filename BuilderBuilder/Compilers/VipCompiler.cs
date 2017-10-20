@@ -76,6 +76,18 @@
             OpenBlock();
 
             AddLine($"{EntityPrivateVar}.{Name} = {name};");
+            if (field.InverseHandling == Field.InverseHandlingType.OneToOne) {
+                AddLine($"{name}.{EntityClass} = {EntityPrivateVar};");
+            }
+            if (field.InverseHandling == Field.InverseHandlingType.ManyToOne || field.InverseHandling == Field.InverseHandlingType.ManyToMany) {
+                AddLine($"{name}.{EntityClass}s.Add({EntityPrivateVar});");
+            }
+            if (field.InverseHandling == Field.InverseHandlingType.OneToMany) {
+                AddLine($"foreach (var obj in {name})");
+                OpenBlock();
+                AddLine($"obj.{EntityClass} = {EntityPrivateVar};");
+                CloseBlock();
+            }
             AddLine("return this;");
 
             CloseBlock();
