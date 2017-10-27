@@ -29,14 +29,11 @@ namespace BuilderBuilder
         public override void OnResize() {
             _dbFramework.PositionTopRightInside(this);
 
-            _tbInput.PositionBottomLeftInside(this);
-            _tbInput.StretchRightFixed(Width / 2 - MattyControl.Distance - _tbInput.Width);
-            _tbInput.StretchUpTo(_dbFramework);
-            _tbInput.Label.PositionAbove(_tbInput);
+            _tbInput.PositionBelow(_dbFramework);
+            _tbInput.StretchDownInside(this);
 
-            _tbOutput.PositionRightOf(_tbInput);
-            _tbOutput.StretchRightInside(this);
-            _tbOutput.StretchDownInside(this);
+            ControlHelpers.StretchControlsHorizontallyInside(this, _tbInput, _tbOutput);
+            _tbInput.Label.PositionAbove(_tbInput);
             _tbOutput.Label.PositionAbove(_tbOutput);
         }
 
