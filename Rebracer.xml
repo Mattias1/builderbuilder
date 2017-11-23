@@ -40,9 +40,9 @@
         <PropertyValue name="Indent_BlockContents">1</PropertyValue>
         <PropertyValue name="Indent_Braces">0</PropertyValue>
         <PropertyValue name="Indent_CaseContents">1</PropertyValue>
-        <PropertyValue name="Indent_CaseLabels">1</PropertyValue>
+        <PropertyValue name="Indent_CaseLabels">0</PropertyValue>
         <PropertyValue name="Indent_FlushLabelsLeft">0</PropertyValue>
-        <PropertyValue name="Indent_UnindentLabels">1</PropertyValue>
+        <PropertyValue name="Indent_UnindentLabels">2</PropertyValue>
         <PropertyValue name="NewLines_AnonymousTypeInitializer_EachMember">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_Accessor">0</PropertyValue>
         <PropertyValue name="NewLines_Braces_AnonymousMethod">0</PropertyValue>
@@ -327,7 +327,9 @@
         <PropertyValue name="Style_PreferExpressionBodiedOperators">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_PreferExpressionBodiedProperties">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_PreferInlinedVariableDeclaration">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Info" /&gt;</PropertyValue>
+        <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInDeclaration">1</PropertyValue>
         <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInDeclaration_CodeStyle">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
+        <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInMemberAccess">1</PropertyValue>
         <PropertyValue name="Style_PreferIntrinsicPredefinedTypeKeywordInMemberAccess_CodeStyle">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_PreferNullPropagation">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Info" /&gt;</PropertyValue>
         <PropertyValue name="Style_PreferObjectInitializer">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Info" /&gt;</PropertyValue>
@@ -336,6 +338,7 @@
         <PropertyValue name="Style_PreferThrowExpression">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="true" DiagnosticSeverity="Info" /&gt;</PropertyValue>
         <PropertyValue name="Style_QualifyEventAccess">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_QualifyFieldAccess">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
+        <PropertyValue name="Style_QualifyMemberAccessWithThisOrMe">1</PropertyValue>
         <PropertyValue name="Style_QualifyMethodAccess">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_QualifyPropertyAccess">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
         <PropertyValue name="Style_UseImplicitTypeForIntrinsicTypes">&lt;CodeStyleOption SerializationVersion="1" Type="Boolean" Value="false" DiagnosticSeverity="Hidden" /&gt;</PropertyValue>
