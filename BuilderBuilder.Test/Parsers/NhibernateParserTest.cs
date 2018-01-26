@@ -32,6 +32,8 @@ namespace BuilderBuilder.Test
                     [Class]
                     public class ExampleEntity
                     {
+                        public const string TABLENAME = ""ExampleEntityTable"";
+
                         [Id]
                         public virtual long? Id { get; set; }
 
