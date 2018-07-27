@@ -27,7 +27,7 @@
             AddLine("using ...");
             AddEmptyLine();
 
-            AddLine("namespace Declaratiegeneratie.WebApplication.VIPLive.Test. ...");
+            AddLine("namespace VipLive.WebApplication.VIPLive.Test. ...");
             OpenBlock();
 
             AddLine($"public class {EntityClass}TestHelper");
@@ -51,7 +51,7 @@
         }
 
         private void initBuilderClass() {
-            AddLine($"private {EntityClass} {EntityPrivateVar};");
+            AddLine($"private readonly {EntityClass} {EntityPrivateVar};");
             AddEmptyLine();
 
             AddLine($"public {BuilderClass}() : this(new {EntityClass}()) {{ }}");

@@ -28,7 +28,7 @@ namespace BuilderBuilder.Test
             get => @"
                 using ...
 
-                namespace Declaratiegeneratie.WebApplication.VIPLive.Test. ...
+                namespace VipLive.WebApplication.VIPLive.Test. ...
                 {
                     public class ExampleEntityTestHelper
                     {
@@ -40,7 +40,7 @@ namespace BuilderBuilder.Test
 
                         public class ExampleEntityBuilder
                         {
-                            private ExampleEntity _exampleEntity;
+                            private readonly ExampleEntity _exampleEntity;
 
                             public ExampleEntityBuilder() : this(new ExampleEntity()) { }
 
