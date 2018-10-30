@@ -36,11 +36,9 @@
 
         private void addExampleBuilder() {
             AddLine($"public static {BuilderClass} Builder()");
-            OpenBlock();
-
-            AddLine($"return new {BuilderClass}();");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"return new {BuilderClass}();");
+            });
         }
 
         private void openBuilderClass() {
@@ -58,11 +56,9 @@
             AddEmptyLine();
 
             AddLine($"public {BuilderClass}({EntityClass} {LocalVar(EntityClass)})");
-            OpenBlock();
-
-            AddLine($"{EntityPrivateVar} = {LocalVar(EntityClass)};");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"{EntityPrivateVar} = {LocalVar(EntityClass)};");
+            });
         }
 
         private void addField(Field field) {
@@ -73,71 +69,59 @@
             AddEmptyLine();
 
             AddLine($"public {BuilderClass} With{Name}({type} {name})");
-            OpenBlock();
-
-            AddLine($"{EntityPrivateVar}.{Name} = {name};");
-            if (field.InverseHandling == Field.InverseHandlingType.OneToOne) {
-                AddLine($"{name}.{EntityClass} = {EntityPrivateVar};");
-            }
-            if (field.InverseHandling == Field.InverseHandlingType.ManyToOne || field.InverseHandling == Field.InverseHandlingType.ManyToMany) {
-                AddLine($"{name}.{EntityClass}s.Add({EntityPrivateVar});");
-            }
-            if (field.InverseHandling == Field.InverseHandlingType.OneToMany) {
-                AddLine($"foreach (var obj in {name})");
-                OpenBlock();
-                AddLine($"obj.{EntityClass} = {EntityPrivateVar};");
-                CloseBlock();
-            }
-            AddLine("return this;");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"{EntityPrivateVar}.{Name} = {name};");
+                if (field.InverseHandling == Field.InverseHandlingType.OneToOne) {
+                    AddLine($"{name}.{EntityClass} = {EntityPrivateVar};");
+                }
+                if (field.InverseHandling == Field.InverseHandlingType.ManyToOne || field.InverseHandling == Field.InverseHandlingType.ManyToMany) {
+                    AddLine($"{name}.{EntityClass}s.Add({EntityPrivateVar});");
+                }
+                if (field.InverseHandling == Field.InverseHandlingType.OneToMany) {
+                    AddLine($"foreach (var obj in {name})");
+                    WithBlock(() => {
+                        AddLine($"obj.{EntityClass} = {EntityPrivateVar};");
+                    });
+                }
+                AddLine("return this;");
+            });
         }
 
         private void addBuildMethods() {
             AddEmptyLine();
 
             AddLine($"public {EntityClass} Build()");
-            OpenBlock();
-
-            AddLine($"return {EntityPrivateVar};");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"return {EntityPrivateVar};");
+            });
 
             AddEmptyLine();
 
             AddLine($"public {EntityClass} AutoBuild()");
-            OpenBlock();
-
-            AddLine($"if ({EntityPrivateVar}.Id is null)");
-            OpenBlock();
-
-            AddLine("WithId(IdGenerator.Next());");
-
-            CloseBlock();
-            AddLine("return Build();");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"if ({EntityPrivateVar}.Id is null)");
+                WithBlock(() => {
+                    AddLine("WithId(IdGenerator.Next());");
+                });
+                AddLine("return Build();");
+            });
         }
 
         private void addPersistMethods() {
             AddEmptyLine();
 
             AddLine($"public {EntityClass} Persist(DeclaratiegeneratieZorggroepenDbTest context)");
-            OpenBlock();
-
-            AddLine("SaveToDatabase(context);");
-            AddLine("return Build();");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine("SaveToDatabase(context);");
+                AddLine("return Build();");
+            });
 
             AddEmptyLine();
 
             AddLine("private void SaveToDatabase(DeclaratiegeneratieZorggroepenDbTest context)");
-            OpenBlock();
-
-            AddLine($"context.SaveToDatabase({EntityPrivateVar});");
-
-            CloseBlock();
+            WithBlock(() => {
+                AddLine($"context.SaveToDatabase({EntityPrivateVar});");
+            });
         }
 
         private void closeClasses() {

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace BuilderBuilder
 {
@@ -54,6 +55,12 @@ namespace BuilderBuilder
                     AddLine("}");
                 }
             }
+        }
+
+        protected void WithBlock(Action addBlockContent) {
+            OpenBlock();
+            addBlockContent();
+            CloseBlock();
         }
 
         protected string LocalVar(string name) {
