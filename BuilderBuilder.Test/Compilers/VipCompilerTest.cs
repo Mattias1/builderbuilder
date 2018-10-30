@@ -95,6 +95,15 @@ namespace BuilderBuilder.Test
                                 return _exampleEntity;
                             }
 
+                            public ExampleEntity AutoBuild()
+                            {
+                                if (_exampleEntity.Id is null)
+                                {
+                                    WithId(IdGenerator.Next());
+                                }
+                                return Build();
+                            }
+
                             public ExampleEntity Persist(DeclaratiegeneratieZorggroepenDbTest context)
                             {
                                 SaveToDatabase(context);

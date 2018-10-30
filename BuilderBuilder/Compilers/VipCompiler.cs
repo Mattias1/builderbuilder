@@ -17,7 +17,7 @@
                 addField(field);
             }
 
-            addBuildMethod();
+            addBuildMethods();
             addPersistMethods();
 
             closeClasses();
@@ -93,13 +93,28 @@
             CloseBlock();
         }
 
-        private void addBuildMethod() {
+        private void addBuildMethods() {
             AddEmptyLine();
 
             AddLine($"public {EntityClass} Build()");
             OpenBlock();
 
             AddLine($"return {EntityPrivateVar};");
+
+            CloseBlock();
+
+            AddEmptyLine();
+
+            AddLine($"public {EntityClass} AutoBuild()");
+            OpenBlock();
+
+            AddLine($"if ({EntityPrivateVar}.Id is null)");
+            OpenBlock();
+
+            AddLine("WithId(IdGenerator.Next());");
+
+            CloseBlock();
+            AddLine("return Build();");
 
             CloseBlock();
         }
