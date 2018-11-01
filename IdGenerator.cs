@@ -15,10 +15,10 @@ namespace Something.Something.TestHelpers
         private static IdGenerator Get => idGenerator ?? (idGenerator = new IdGenerator());
 
         public static int Next() => Next(Type.Unspecified);
-        public static int Next(Type type) => Get.Next(type);
+        public static int Next(Type type) => Get.CalculateNext(type);
 
         public static Guid NextGuid() => NextGuid(Type.Unspecified);
-        public static Guid NextGuid(Type type) => Get.NextGuid(type);
+        public static Guid NextGuid(Type type) => Get.CalculateNextGuid(type);
 
         private IdGenerator() {
             var types = (Type[])Enum.GetValues(typeof(Type));
@@ -28,14 +28,14 @@ namespace Something.Something.TestHelpers
             }
         }
 
-        public int Next(Type type) {
+        public int CalculateNext(Type type) {
             lock (lockObj) {
                 currentIds[type]++;
                 return currentIds[type];
             }
         }
 
-        public Guid NextGuid(Type type) {
+        public Guid CalculateNextGuid(Type type) {
             lock (lockObj) {
                 currentIds[type]++;
                 return new Guid(currentIds[type], 0, 0, new byte[8]);
