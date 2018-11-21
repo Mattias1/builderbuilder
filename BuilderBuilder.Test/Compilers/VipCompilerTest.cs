@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace BuilderBuilder.Test
 {
@@ -21,12 +20,11 @@ namespace BuilderBuilder.Test
 
             string result = Compiler.Compile(input);
 
-            Assert.AreEqual(TrimWhitespace(ExampleOutput), TrimWhitespace(result));
+            AssertHelper.AssertMultilineStringEq(ExampleOutput, result);
         }
 
         private string ExampleOutput {
-            get => @"
-                using ...
+            get => @"                using ...
 
                 namespace VipLive.WebApplication.VIPLive.Test. ...
                 {
@@ -97,6 +95,15 @@ namespace BuilderBuilder.Test
                                 return _exampleEntity;
                             }
 
+                            public ExampleEntity AutoBuild()
+                            {
+                                if (_exampleEntity.Id is null)
+                                {
+                                    WithId(IdGenerator.Next());
+                                }
+                                return Build();
+                            }
+
                             public ExampleEntity Persist(DeclaratiegeneratieZorggroepenDbTest context)
                             {
                                 SaveToDatabase(context);
@@ -111,10 +118,6 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
-
-        private string TrimWhitespace(string s) {
-            return s.Replace(" ", "").Replace("\n", "").Replace("\r", "").Replace("\t", "");
         }
     }
 }

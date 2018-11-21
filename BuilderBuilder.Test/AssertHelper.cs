@@ -60,5 +60,17 @@ namespace BuilderBuilder.Test
             var errors = string.Join(", ", list.Select(i => i.ToString()));
             return $"{description}: {errors}";
         }
+
+        public static void AssertMultilineStringEq(string expected, string actual) {
+            var split = new char[] { '\n' };
+            var el = expected.Split(split).Select(TrimWhitespace);
+            var al = actual.Split(split).Select(TrimWhitespace);
+
+            ListEq(al, el);
+        }
+
+        private static string TrimWhitespace(string s) {
+            return s.Replace(" ", "").Replace("\n", "").Replace("\r", "").Replace("\t", "");
+        }
     }
 }
