@@ -104,13 +104,13 @@ namespace BuilderBuilder.Test
                                 return Build();
                             }
 
-                            public ExampleEntity Persist(DeclaratiegeneratieZorggroepenDbTest context)
+                            public ExampleEntity Persist(VipLiveDbTest context)
                             {
                                 SaveToDatabase(context);
                                 return Build();
                             }
 
-                            private void SaveToDatabase(DeclaratiegeneratieZorggroepenDbTest context)
+                            private void SaveToDatabase(VipLiveDbTest context)
                             {
                                 context.SaveToDatabase(_exampleEntity);
                             }

@@ -110,7 +110,7 @@
         private void addPersistMethods() {
             AddEmptyLine();
 
-            AddLine($"public {EntityClass} Persist(DeclaratiegeneratieZorggroepenDbTest context)");
+            AddLine($"public {EntityClass} Persist(VipLiveDbTest context)");
             WithBlock(() => {
                 AddLine("SaveToDatabase(context);");
                 AddLine("return Build();");
@@ -118,7 +118,7 @@
 
             AddEmptyLine();
 
-            AddLine("private void SaveToDatabase(DeclaratiegeneratieZorggroepenDbTest context)");
+            AddLine("private void SaveToDatabase(VipLiveDbTest context)");
             WithBlock(() => {
                 AddLine($"context.SaveToDatabase({EntityPrivateVar});");
             });
