@@ -15,6 +15,7 @@ namespace BuilderBuilder
                 _dbFramework.Items.Add(framework.Name);
             }
             _dbFramework.SelectedIndex = Frameworks.IndexOf(Settings.Get.SelectedFramework);
+            _dbFramework.SelectedIndexChanged += OnInputChange;
 
             _tbInput = new RichTb(this);
             _tbInput.Multiline = true;

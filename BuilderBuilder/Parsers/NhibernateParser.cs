@@ -5,7 +5,7 @@
         private BuilderEntity _result;
 
         public override BuilderEntity Parse(string[] lines) {
-            _result = new BuilderEntity();
+            _result = new BuilderEntity(persistable: true);
 
             for (int i = 0; i < lines.Length; i++) {
                 string line = lines[i];

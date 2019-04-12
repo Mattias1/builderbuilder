@@ -3,8 +3,8 @@ Generate code for my unit-test builders.
 It's not perfect as you have to fix the usings and namespaces and such yourselves, but it should save you quite some typing.
 
 ## Prerequisite
-It expects an `IdGenerator` to exist in your project to generate the `AutoBuild` method.
-You can copy the one in this repo if you want.
+It expects the `AbstractBuilder` and `AbstractEntityBuilder` base classes and an `IdGenerator` to exist in your project.
+You can copy the ones in this repo if you want.
 
 ## Example
 This tool will take an entity, for example:

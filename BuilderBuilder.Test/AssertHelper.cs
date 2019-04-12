@@ -7,13 +7,19 @@ namespace BuilderBuilder.Test
 {
     static class AssertHelper
     {
-        public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name)[] fields) {
+        public static void AssertBuilderEntity(
+            BuilderEntity entityResult, string name, bool persistable, params (string type, string name)[] fields
+        ) {
             var fieldsWithInverseType = fields.Select(t => (t.type, t.name, Field.InverseHandlingType.None)).ToArray();
-            AssertBuilderEntity(entityResult, name, fieldsWithInverseType);
+            AssertBuilderEntity(entityResult, name, persistable, fieldsWithInverseType);
         }
 
-        public static void AssertBuilderEntity(BuilderEntity entityResult, string name, params (string type, string name, Field.InverseHandlingType inverse)[] fields) {
+        public static void AssertBuilderEntity(BuilderEntity entityResult, string name, bool persistable,
+            params (string type, string name, Field.InverseHandlingType inverse)[] fields
+        ) {
             Assert.AreEqual(name, entityResult.Name);
+
+            Assert.AreEqual(persistable, entityResult.Persistable);
 
             var expectedFields = fields.Select(t => new Field(t.type, t.name, t.inverse));
 

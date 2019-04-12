@@ -4,7 +4,6 @@
     {
         private string EntityClass => BuilderEntity.Name;
         private string BuilderClass => EntityClass + "Builder";
-        private string EntityPrivateVar => PrivateVar(EntityClass);
 
         protected override void Compile() {
             openTestHelperClass();
@@ -17,8 +16,9 @@
                 addField(field);
             }
 
-            addBuildMethods();
-            addPersistMethods();
+            if (BuilderEntity.Persistable) {
+                addAutoBuildMethod();
+            }
 
             closeClasses();
         }
@@ -44,21 +44,20 @@
         private void openBuilderClass() {
             AddEmptyLines(2);
 
-            AddLine($"public class {BuilderClass}");
+            if (BuilderEntity.Persistable) {
+                AddLine($"public class {BuilderClass} : AbstractEntityBuilder<{EntityClass}>");
+            }
+            else {
+                AddLine($"public class {BuilderClass} : AbstractBuilder<{EntityClass}>");
+            }
             OpenBlock();
         }
 
         private void initBuilderClass() {
-            AddLine($"private readonly {EntityClass} {EntityPrivateVar};");
+            AddLine($"public {BuilderClass}() : base() {{ }}");
             AddEmptyLine();
 
-            AddLine($"public {BuilderClass}() : this(new {EntityClass}()) {{ }}");
-            AddEmptyLine();
-
-            AddLine($"public {BuilderClass}({EntityClass} {LocalVar(EntityClass)})");
-            WithBlock(() => {
-                AddLine($"{EntityPrivateVar} = {LocalVar(EntityClass)};");
-            });
+            AddLine($"public {BuilderClass}({EntityClass} {LocalVar(EntityClass)}) : base({LocalVar(EntityClass)}) {{ }}");
         }
 
         private void addField(Field field) {
@@ -70,57 +69,33 @@
 
             AddLine($"public {BuilderClass} With{Name}({type} {name})");
             WithBlock(() => {
-                AddLine($"{EntityPrivateVar}.{Name} = {name};");
+                AddLine($"Item.{Name} = {name};");
                 if (field.InverseHandling == Field.InverseHandlingType.OneToOne) {
-                    AddLine($"{name}.{EntityClass} = {EntityPrivateVar};");
+                    AddLine($"{name}.{EntityClass} = Item;");
                 }
                 if (field.InverseHandling == Field.InverseHandlingType.ManyToOne || field.InverseHandling == Field.InverseHandlingType.ManyToMany) {
-                    AddLine($"{name}.{EntityClass}s.Add({EntityPrivateVar});");
+                    AddLine($"{name}.{EntityClass}s.Add(Item);");
                 }
                 if (field.InverseHandling == Field.InverseHandlingType.OneToMany) {
                     AddLine($"foreach (var obj in {name})");
                     WithBlock(() => {
-                        AddLine($"obj.{EntityClass} = {EntityPrivateVar};");
+                        AddLine($"obj.{EntityClass} = Item;");
                     });
                 }
                 AddLine("return this;");
             });
         }
 
-        private void addBuildMethods() {
+        private void addAutoBuildMethod() {
             AddEmptyLine();
 
-            AddLine($"public {EntityClass} Build()");
+            AddLine($"public override {EntityClass} AutoBuild()");
             WithBlock(() => {
-                AddLine($"return {EntityPrivateVar};");
-            });
-
-            AddEmptyLine();
-
-            AddLine($"public {EntityClass} AutoBuild()");
-            WithBlock(() => {
-                AddLine($"if ({EntityPrivateVar}.Id is null)");
+                AddLine($"if (Item.Id is null)");
                 WithBlock(() => {
                     AddLine("WithId(IdGenerator.Next());");
                 });
                 AddLine("return Build();");
-            });
-        }
-
-        private void addPersistMethods() {
-            AddEmptyLine();
-
-            AddLine($"public {EntityClass} Persist(VipLiveDbTest context)");
-            WithBlock(() => {
-                AddLine("SaveToDatabase(context);");
-                AddLine("return Build();");
-            });
-
-            AddEmptyLine();
-
-            AddLine("private void SaveToDatabase(VipLiveDbTest context)");
-            WithBlock(() => {
-                AddLine($"context.SaveToDatabase({EntityPrivateVar});");
             });
         }
 

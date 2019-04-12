@@ -4,11 +4,14 @@ namespace BuilderBuilder
 {
     public class BuilderEntity
     {
+        public bool Persistable { get; set; }
+
         public string Name { get; set; }
 
         public List<Field> Fields { get; private set; }
 
-        public BuilderEntity() {
+        public BuilderEntity(bool persistable) {
+            Persistable = persistable;
             Name = "";
             Fields = new List<Field>();
         }

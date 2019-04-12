@@ -8,8 +8,8 @@ namespace BuilderBuilder.Test
         private VipCompiler Compiler => new VipCompiler();
 
         [TestMethod]
-        public void Compile_Example() {
-            var input = new BuilderEntity();
+        public void Compile_PersistExample() {
+            var input = new BuilderEntity(persistable: true);
             input.Name = "ExampleEntity";
             input.Fields.Add(new Field("long?", "Id"));
             input.Fields.Add(new Field("string", "Name"));
@@ -20,10 +20,10 @@ namespace BuilderBuilder.Test
 
             string result = Compiler.Compile(input);
 
-            AssertHelper.AssertMultilineStringEq(ExampleOutput, result);
+            AssertHelper.AssertMultilineStringEq(PersistExampleOutput, result);
         }
 
-        private string ExampleOutput {
+        private string PersistExampleOutput {
             get => @"                using ...
 
                 namespace VipLive.WebApplication.VIPLive.Test. ...
@@ -36,83 +36,131 @@ namespace BuilderBuilder.Test
                         }
 
 
-                        public class ExampleEntityBuilder
+                        public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
                         {
-                            private readonly ExampleEntity _exampleEntity;
+                            public ExampleEntityBuilder() : base() { }
 
-                            public ExampleEntityBuilder() : this(new ExampleEntity()) { }
-
-                            public ExampleEntityBuilder(ExampleEntity exampleEntity)
-                            {
-                                _exampleEntity = exampleEntity;
-                            }
+                            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
 
                             public ExampleEntityBuilder WithId(long? id)
                             {
-                                _exampleEntity.Id = id;
+                                Item.Id = id;
                                 return this;
                             }
 
                             public ExampleEntityBuilder WithName(string name)
                             {
-                                _exampleEntity.Name = name;
+                                Item.Name = name;
                                 return this;
                             }
 
                             public ExampleEntityBuilder WithTwin(Brother twin)
                             {
-                                _exampleEntity.Twin = twin;
-                                twin.ExampleEntity = _exampleEntity;
+                                Item.Twin = twin;
+                                twin.ExampleEntity = Item;
                                 return this;
                             }
 
                             public ExampleEntityBuilder WithMom(Parent mom)
                             {
-                                _exampleEntity.Mom = mom;
-                                mom.ExampleEntitys.Add(_exampleEntity);
+                                Item.Mom = mom;
+                                mom.ExampleEntitys.Add(Item);
                                 return this;
                             }
 
                             public ExampleEntityBuilder WithKids(List<Child> kids)
                             {
-                                _exampleEntity.Kids = kids;
+                                Item.Kids = kids;
                                 foreach (var obj in kids)
                                 {
-                                    obj.ExampleEntity = _exampleEntity;
+                                    obj.ExampleEntity = Item;
                                 }
                                 return this;
                             }
 
                             public ExampleEntityBuilder WithParents(List<Parent> parents)
                             {
-                                _exampleEntity.Parents = parents;
-                                parents.ExampleEntitys.Add(_exampleEntity);
+                                Item.Parents = parents;
+                                parents.ExampleEntitys.Add(Item);
                                 return this;
                             }
 
-                            public ExampleEntity Build()
+                            public override ExampleEntity AutoBuild()
                             {
-                                return _exampleEntity;
-                            }
-
-                            public ExampleEntity AutoBuild()
-                            {
-                                if (_exampleEntity.Id is null)
+                                if (Item.Id is null)
                                 {
                                     WithId(IdGenerator.Next());
                                 }
                                 return Build();
                             }
+                        }
+                    }
+                }
+            ";
+        }
 
-                            public ExampleEntity Persist(VipLiveDbTest context)
+        [TestMethod]
+        public void Compile_NonPersistExample() {
+            var input = new BuilderEntity(persistable: false);
+            input.Name = "ExampleEntity";
+            input.Fields.Add(new Field("string", "Name"));
+            input.Fields.Add(new Field("Brother", "Twin"));
+            input.Fields.Add(new Field("Parent", "Mom"));
+            input.Fields.Add(new Field("List<Child>", "Kids"));
+            input.Fields.Add(new Field("List<Parent>", "Parents"));
+
+            string result = Compiler.Compile(input);
+
+            AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
+        }
+
+        private string NonPersistExampleOutput {
+            get => @"                using ...
+
+                namespace VipLive.WebApplication.VIPLive.Test. ...
+                {
+                    public class ExampleEntityTestHelper
+                    {
+                        public static ExampleEntityBuilder Builder()
+                        {
+                            return new ExampleEntityBuilder();
+                        }
+
+
+                        public class ExampleEntityBuilder : AbstractBuilder<ExampleEntity>
+                        {
+                            public ExampleEntityBuilder() : base() { }
+
+                            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
+
+                            public ExampleEntityBuilder WithName(string name)
                             {
-                                SaveToDatabase(context);
-                                return Build();
+                                Item.Name = name;
+                                return this;
                             }
 
-                            private void SaveToDatabase(VipLiveDbTest context)
+                            public ExampleEntityBuilder WithTwin(Brother twin)
                             {
-                                context.SaveToDatabase(_exampleEntity);
+                                Item.Twin = twin;
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithMom(Parent mom)
+                            {
+                                Item.Mom = mom;
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithKids(List<Child> kids)
+                            {
+                                Item.Kids = kids;
+                                return this;
+                            }
+
+                            public ExampleEntityBuilder WithParents(List<Parent> parents)
+                            {
+                                Item.Parents = parents;
+                                return this;
                             }
                         }
                     }

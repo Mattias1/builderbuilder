@@ -12,7 +12,7 @@ namespace BuilderBuilder.Test
         public void Parse_Example() {
             BuilderEntity result = Parser.Parse(ExampleInput);
 
-            AssertHelper.AssertBuilderEntity(result, "ExampleEntity",
+            AssertHelper.AssertBuilderEntity(result, "ExampleEntity", true,
                 ("long?", "Id", Field.InverseHandlingType.None),
                 ("string", "Name", Field.InverseHandlingType.None),
                 ("My_class_123", "My_name_123", Field.InverseHandlingType.None),

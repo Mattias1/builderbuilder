@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 
 namespace BuilderBuilder.Test
 {
@@ -12,7 +11,7 @@ namespace BuilderBuilder.Test
         public void Parse_Example() {
             BuilderEntity result = Parser.Parse(ExampleInput);
 
-            AssertHelper.AssertBuilderEntity(result, "ExampleEntity",
+            AssertHelper.AssertBuilderEntity(result, "ExampleEntity", false,
                 ("long?", "Id"),
                 ("My_class_123", "My_name_123"),
                 ("IEnumerable<Stuff>", "Stuffs"));
