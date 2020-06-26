@@ -154,5 +154,34 @@ namespace BuilderBuilder.Test
             var result = ParsePublicVirtualField(line);
             Assert.IsNotNull(result);
         }
+
+        // Is constructor
+        [TestMethod]
+        public void ParseConstructor_IfParameterlessConstructor_ThenEmptyString() {
+            string line = "public MyClass()";
+            var result = ParseConstructor(line, "MyClass");
+            Assert.AreEqual("", result);
+        }
+
+        [TestMethod]
+        public void ParseConstructor_IfConstructor_ThenParameters() {
+            string line = "public MyClass(long? id, IEnumerable<Stuff> stuffs) {";
+            var result = ParseConstructor(line, "MyClass");
+            Assert.AreEqual("long? id, IEnumerable<Stuff> stuffs", result);
+        }
+
+        [TestMethod]
+        public void ParseConstructor_IfConstructorWithBase_ThenParameters() {
+            string line = "public MyClass(int one, int two) : base(one, two, 3) {";
+            var result = ParseConstructor(line, "MyClass");
+            Assert.AreEqual("int one, int two", result);
+        }
+
+        [TestMethod]
+        public void ParseConstructor_IfFunction_ThenNull() {
+            string line = "public int MyFunction()";
+            var result = ParseConstructor(line, "MyFunction");
+            Assert.IsNull(result);
+        }
     }
 }

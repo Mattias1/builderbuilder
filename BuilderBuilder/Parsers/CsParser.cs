@@ -1,4 +1,6 @@
-﻿namespace BuilderBuilder
+﻿using System.Collections.Generic;
+
+namespace BuilderBuilder
 {
     public abstract class CsParser : Parser
     {
@@ -51,6 +53,11 @@
                 return (values[0], values[1]);
             }
             return null;
+        }
+
+        public string ParseConstructor(string line, string name) {
+            string constructorPattern = $@"public\s+{name}\s*\(([^)]*)\)";
+            return MatchesPattern(line, constructorPattern) ? GetPatternMatch(line, constructorPattern) : null;
         }
     }
 }
