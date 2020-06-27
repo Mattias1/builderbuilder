@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compilers\Compiler.cs" />
+    <Compile Include="Compilers\ImmutableCompiler.cs" />
     <Compile Include="Compilers\VipCompiler.cs" />
     <Compile Include="Parsers\CsParser.cs" />
+    <Compile Include="Parsers\ImmutableParser.cs" />
     <Compile Include="Parsers\PlainCsClassParser.cs" />
     <Compile Include="Parsers\NhibernateParser.cs" />
     <Compile Include="Framework.cs" />
