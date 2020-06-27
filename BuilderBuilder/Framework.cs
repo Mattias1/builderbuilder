@@ -10,7 +10,8 @@ namespace BuilderBuilder
         private static Framework[] BuildFrameworks() {
             return _frameworks = new Framework[] {
                 new Framework("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler()),
-                new Framework("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler())
+                new Framework("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler()),
+                new Framework("C# immutable", "Immutable", new ImmutableParser(), new ImmutableCompiler())
             };
         }
 

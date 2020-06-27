@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertHelper.cs" />
+    <Compile Include="Compilers\ImmutableCompilerTest.cs" />
     <Compile Include="Compilers\VipCompilerTest.cs" />
     <Compile Include="Parsers\CsParserTest.cs" />
     <Compile Include="Parsers\NhibernateParserTest.cs" />
