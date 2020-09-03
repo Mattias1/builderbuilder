@@ -26,6 +26,7 @@ namespace BuilderBuilder.Test
                         public readonly long? Id;
                         public My_class_123 My_name_123 { get; }
                         public IReadOnlyList<Stuff> Stuffs { get; }
+                        public SomeIgnoredThing? BecauseItsNotInTheConstructor { get; private set; }
 
                         public ExampleStruct(long? id, My_class_123 my_name_123) : this(id, my_name_123, new List<Stuff>().AsReadOnly()) { }
 

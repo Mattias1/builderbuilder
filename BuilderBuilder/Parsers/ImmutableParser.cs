@@ -35,7 +35,7 @@ namespace BuilderBuilder
         }
 
         private void parseConstructor(string[] lines, int i, string line) {
-            string constructorParameters = ParseConstructor(line, _result.Name);
+            string constructorParameters = ParseConstructor(lines, i, _result.Name);
             if (constructorParameters != null) {
                 var parameters = constructorParameters.Split(',').Select(p => p.Trim()).ToArray();
                 _parametersOfConstructors.Add(parameters);

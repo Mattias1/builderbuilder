@@ -27,7 +27,6 @@ namespace BuilderBuilder
         protected abstract void Compile();
 
         protected void AddEmptyLine() => AddEmptyLines(1);
-
         protected void AddEmptyLines(int numberOfLines) {
             for (int i = 0; i < numberOfLines; i++) {
                 StringBuilder.AppendLine();
@@ -70,8 +69,8 @@ namespace BuilderBuilder
             return char.ToLowerInvariant(name[0]) + name.Substring(1);
         }
 
-        protected string PrivateVar(string name) {
-            return '_' + LocalVar(name);
-        }
+        protected string PrivateVar(string name) => '_' + LocalVar(name);
+
+        protected string Nullable(string type) => type.EndsWith("?") ? type : $"{type}?";
     }
 }

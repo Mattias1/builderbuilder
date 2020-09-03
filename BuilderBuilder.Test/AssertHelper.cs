@@ -75,6 +75,10 @@ namespace BuilderBuilder.Test
             ListEq(al, el);
         }
 
+        public static void AreEqualModuloWhitespace(string expected, string actual) {
+            Assert.AreEqual(TrimWhitespace(expected), TrimWhitespace(actual));
+        }
+
         private static string TrimWhitespace(string s) {
             return s.Replace(" ", "").Replace("\n", "").Replace("\r", "").Replace("\t", "");
         }

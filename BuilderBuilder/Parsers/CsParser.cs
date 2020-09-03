@@ -55,9 +55,27 @@ namespace BuilderBuilder
             return null;
         }
 
-        public string ParseConstructor(string line, string name) {
-            string constructorPattern = $@"public\s+{name}\s*\(([^)]*)\)";
-            return MatchesPattern(line, constructorPattern) ? GetPatternMatch(line, constructorPattern) : null;
+        public string ParseConstructor(string[] lines, int index, string name) {
+            string startPattern = $@"public\s+{name}\s*\(";
+            string firstParamsPattern = $@"public\s+{name}\s*\(([^)]*)";
+            string paramsPattern = @"([^)]*)";
+            string endPattern = @"\)";
+
+            if (MatchesPattern(lines[index], startPattern)) {
+                string result = MatchesPattern(lines[index], firstParamsPattern) ? GetPatternMatch(lines[index], firstParamsPattern) : "";
+                if (MatchesPattern(lines[index], endPattern)) {
+                    return result;
+                }
+
+                for (int i = index + 1; i < lines.Length; i++) {
+                    string line = lines[i];
+                    result += MatchesPattern(line, paramsPattern) ? GetPatternMatch(line, paramsPattern) : "";
+                    if (MatchesPattern(line, endPattern)) {
+                        return result;
+                    }
+                }
+            }
+            return null;
         }
     }
 }
