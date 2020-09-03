@@ -39,11 +39,11 @@ namespace BuilderBuilder.Test
                         public class ExampleEntityBuilder
                         {
                             private long? _id;
-                            private string _name;
-                            private Brother _twin;
-                            private Parent _mom;
-                            private List<Child> _kids;
-                            private List<Parent> _parents;
+                            private string? _name;
+                            private Brother? _twin;
+                            private Parent? _mom;
+                            private List<Child>? _kids;
+                            private List<Parent>? _parents;
 
                             public ExampleEntityBuilder WithId(long? id)
                             {
@@ -83,6 +83,27 @@ namespace BuilderBuilder.Test
 
                             public ExampleEntity Build()
                             {
+                                if (_name is null)
+                                {
+                                    throw new InvalidOperationException(""Name is not nullable"");
+                                }
+                                if (_twin is null)
+                                {
+                                    throw new InvalidOperationException(""Twin is not nullable"");
+                                }
+                                if (_mom is null)
+                                {
+                                    throw new InvalidOperationException(""Mom is not nullable"");
+                                }
+                                if (_kids is null)
+                                {
+                                    throw new InvalidOperationException(""Kids is not nullable"");
+                                }
+                                if (_parents is null)
+                                {
+                                    throw new InvalidOperationException(""Parents is not nullable"");
+                                }
+
                                 return new ExampleEntity(_id, _name, _twin, _mom, _kids, _parents);
                             }
                         }

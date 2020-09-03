@@ -2,6 +2,8 @@
 
 namespace BuilderBuilder
 {
+    // This compiler assumes that C#8 nullability is enabled, and that it's fields are not structs
+    // (if so, one needs to add .Value to the build method parameter).
     public class ImmutableCompiler : Compiler
     {
         private string EntityClass => BuilderEntity.Name;
@@ -51,7 +53,7 @@ namespace BuilderBuilder
         }
 
         private void addFieldVariable(Field field) {
-            string type = field.Type;
+            string type = Nullable(field.Type);
             string _name = PrivateVar(field.Name);
 
             AddLine($"private {type} {_name};");
@@ -79,12 +81,22 @@ namespace BuilderBuilder
 
             AddLine($"public {EntityClass} Build()");
             WithBlock(() => {
+                foreach (var field in BuilderEntity.Fields.Where(f => !f.Type.EndsWith("?"))) {
+                    string _name = PrivateVar(field.Name);
+                    string Name = field.Name;
+
+                    AddLine($"if ({_name} is null)");
+                    WithBlock(() => {
+                        AddLine($"throw new InvalidOperationException(\"{Name} is not nullable\");");
+                    });
+                }
+
+                AddEmptyLine();
+
                 AddLine($"return new {EntityClass}({parameters});");
             });
         }
 
-        private void closeClasses() {
-            CloseBlocks(3);
-        }
+        private void closeClasses() => CloseBlocks(3);
     }
 }
