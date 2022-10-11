@@ -4,8 +4,8 @@ namespace BuilderBuilder.UI;
 
 internal class MainControl : MattyUserControl
 {
-    private Db _dbFramework;
-    private RichTb _tbInput, _tbOutput;
+    private readonly Db _dbFramework;
+    private readonly RichTb _tbInput, _tbOutput;
 
     public MainControl() {
         _dbFramework = new Db(this);
@@ -41,15 +41,15 @@ internal class MainControl : MattyUserControl
         _tbInput.Select();
     }
 
-    private void OnFrameworkChange(object o, EventArgs e) {
+    private void OnFrameworkChange(object? o, EventArgs e) {
         Settings.Get.SelectedFramework = Frameworks.All[_dbFramework.SelectedIndex];
     }
 
-    private void OnInputChange(object o, EventArgs e) {
+    private void OnInputChange(object? o, EventArgs e) {
         _tbOutput.Text = BuildBuilder(_tbInput.Text, Settings.Get.SelectedFramework);
     }
 
-    public static string BuildBuilder(string input, Framework framework) {
+    private static string BuildBuilder(string input, Framework framework) {
         var entity = framework.Parser.Parse(input);
         return framework.Compiler.Compile(entity);
     }

@@ -2,7 +2,7 @@
 
 public class NhibernateParser : CsParser
 {
-    private BuilderEntity _result;
+    private BuilderEntity _result = null!;
 
     public override BuilderEntity Parse(string[] lines) {
         _result = new BuilderEntity(persistable: true);

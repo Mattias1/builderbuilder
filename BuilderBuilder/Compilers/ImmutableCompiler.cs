@@ -7,25 +7,30 @@ public class ImmutableCompiler : Compiler
     private string EntityClass => BuilderEntity.Name;
     private string BuilderClass => EntityClass + "Builder";
 
-    protected override void Compile() {
-        openTestHelperClass();
-        addExampleBuilder();
+    protected override void Compile()
+    {
+        OpenTestHelperClass();
+        AddExampleBuilder();
 
-        openBuilderClass();
+        OpenBuilderClass();
 
-        foreach (var field in BuilderEntity.Fields) {
-            addFieldVariable(field);
+        foreach (var field in BuilderEntity.Fields)
+        {
+            AddFieldVariable(field);
         }
-        foreach (var field in BuilderEntity.Fields) {
-            addFieldSetter(field);
+
+        foreach (var field in BuilderEntity.Fields)
+        {
+            AddFieldSetter(field);
         }
 
-        addBuildMethod();
+        AddBuildMethod();
 
-        closeClasses();
+        CloseClasses();
     }
 
-    private void openTestHelperClass() {
+    private void OpenTestHelperClass()
+    {
         AddLine("using ...");
         AddEmptyLine();
 
@@ -36,57 +41,61 @@ public class ImmutableCompiler : Compiler
         OpenBlock();
     }
 
-    private void addExampleBuilder() {
+    private void AddExampleBuilder()
+    {
         AddLine($"public static {BuilderClass} Builder()");
-        WithBlock(() => {
-            AddLine($"return new {BuilderClass}();");
-        });
+        WithBlock(() => { AddLine($"return new {BuilderClass}();"); });
     }
 
-    private void openBuilderClass() {
+    private void OpenBuilderClass()
+    {
         AddEmptyLines(2);
 
         AddLine($"public class {BuilderClass}");
         OpenBlock();
     }
 
-    private void addFieldVariable(Field field) {
+    private void AddFieldVariable(Field field)
+    {
         var type = Nullable(field.Type);
-        var _name = PrivateVar(field.Name);
+        var name = PrivateVar(field.Name);
 
-        AddLine($"private {type} {_name};");
+        AddLine($"private {type} {name};");
     }
 
-    private void addFieldSetter(Field field) {
+    private void AddFieldSetter(Field field)
+    {
         var type = field.Type;
-        var Name = field.Name;
-        var name = LocalVar(field.Name);
-        var _name = PrivateVar(field.Name);
+        var name = field.Name;
+        var localVarName = LocalVar(field.Name);
+        var privatePropertyName = PrivateVar(field.Name);
 
         AddEmptyLine();
 
-        AddLine($"public {BuilderClass} With{Name}({type} {name})");
-        WithBlock(() => {
-            AddLine($"{_name} = {name};");
+        AddLine($"public {BuilderClass} With{name}({type} {localVarName})");
+        WithBlock(() =>
+        {
+            AddLine($"{privatePropertyName} = {localVarName};");
             AddLine("return this;");
         });
     }
 
-    private void addBuildMethod() {
+    private void AddBuildMethod()
+    {
         var parameters = string.Join(", ", BuilderEntity.Fields.Select(f => PrivateVar(f.Name)));
 
         AddEmptyLine();
 
         AddLine($"public {EntityClass} Build()");
-        WithBlock(() => {
-            foreach (var field in BuilderEntity.Fields.Where(f => !f.Type.EndsWith("?"))) {
-                var _name = PrivateVar(field.Name);
-                var Name = field.Name;
+        WithBlock(() =>
+        {
+            foreach (var field in BuilderEntity.Fields.Where(f => !f.Type.EndsWith("?")))
+            {
+                var privatePropertyName = PrivateVar(field.Name);
+                var name = field.Name;
 
-                AddLine($"if ({_name} is null)");
-                WithBlock(() => {
-                    AddLine($"throw new InvalidOperationException(\"{Name} is not nullable\");");
-                });
+                AddLine($"if ({privatePropertyName} is null)");
+                WithBlock(() => { AddLine($"throw new InvalidOperationException(\"{name} is not nullable\");"); });
             }
 
             AddEmptyLine();
@@ -95,5 +104,5 @@ public class ImmutableCompiler : Compiler
         });
     }
 
-    private void closeClasses() => CloseBlocks(3);
+    private void CloseClasses() => CloseBlocks(3);
 }

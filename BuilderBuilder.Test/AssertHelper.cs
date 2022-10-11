@@ -23,27 +23,17 @@ internal static class AssertHelper
         ListEq(entityResult.Fields, f => $"{f.Type} {f.Name} {f.InverseHandling}", expectedFields);
     }
 
-    public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params T[] expected) {
-        ListEq(result, compareBy, expected.AsEnumerable());
-    }
-    public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, params C[] expected) {
-        ListEq(result, compareBy, expected.AsEnumerable());
-    }
-    public static void ListEq<T>(IEnumerable<T> result, params T[] expected) {
-        ListEq(result, expected.AsEnumerable());
-    }
-
-    public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<T> expected) {
+    private static void ListEq<T, TC>(IEnumerable<T> result, Func<T, TC> compareBy, IEnumerable<T> expected) {
         ListEq(result.Select(compareBy), expected.Select(compareBy));
     }
-    public static void ListEq<T, C>(IEnumerable<T> result, Func<T, C> compareBy, IEnumerable<C> expected) {
-        ListEq(result.Select(compareBy), expected);
-    }
-    public static void ListEq<T>(IEnumerable<T> result, IEnumerable<T> expected) {
-        var shouldHaves = Missing(result, expected);
+
+    private static void ListEq<T>(IEnumerable<T> result, IEnumerable<T> expected) {
+        var actualArr = result as T[] ?? result.ToArray();
+        var expectedArr = expected as T[] ?? expected.ToArray();
+        var shouldHaves = Missing(actualArr, expectedArr);
         var shouldntHaves = new List<T>();
-        if (result.Count() + shouldHaves.Count != expected.Count()) {
-            shouldntHaves = Missing(expected, result);
+        if (actualArr.Length + shouldHaves.Count != expectedArr.Length) {
+            shouldntHaves = Missing(expectedArr, actualArr);
         }
 
         if (shouldHaves.Count > 0 || shouldntHaves.Count > 0) {
@@ -57,15 +47,16 @@ internal static class AssertHelper
     }
 
     private static string ErrorList<T>(string description, IEnumerable<T> list) {
-        if (!list.Any()) {
+        var arr = list as T[] ?? list.ToArray();
+        if (!arr.Any()) {
             return "";
         }
-        var errors = string.Join(", ", list.Select(i => i.ToString()));
+        var errors = string.Join(", ", arr.Select(i => i.ToString()));
         return $"{description}: {errors}";
     }
 
     public static void AssertMultilineStringEq(string expected, string actual) {
-        var split = new char[] { '\n' };
+        var split = new[] { '\n' };
         var el = expected.Split(split).Select(TrimWhitespace);
         var al = actual.Split(split).Select(TrimWhitespace);
 

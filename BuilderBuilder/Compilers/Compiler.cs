@@ -8,9 +8,9 @@ public abstract class Compiler
 
     protected bool UseBrackets => true;
 
-    protected BuilderEntity BuilderEntity { get; set; }
+    protected BuilderEntity BuilderEntity { get; private set; } = null!;
 
-    protected StringBuilder StringBuilder { get; set; }
+    protected StringBuilder StringBuilder { get; set; } = null!;
 
     private int _indent;
 
@@ -61,14 +61,14 @@ public abstract class Compiler
         CloseBlock();
     }
 
-    protected string LocalVar(string name) {
+    protected static string LocalVar(string name) {
         if (string.IsNullOrEmpty(name)) {
             return "";
         }
         return char.ToLowerInvariant(name[0]) + name.Substring(1);
     }
 
-    protected string PrivateVar(string name) => '_' + LocalVar(name);
+    protected static string PrivateVar(string name) => '_' + LocalVar(name);
 
-    protected string Nullable(string type) => type.EndsWith("?") ? type : $"{type}?";
+    protected static string Nullable(string type) => type.EndsWith("?") ? type : $"{type}?";
 }

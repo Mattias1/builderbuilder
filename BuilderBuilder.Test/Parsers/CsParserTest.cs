@@ -89,7 +89,7 @@ public class CsParserTest : CsParser
     // Line has attribute
     [Fact]
     public void LineHasAttribute_True() {
-        var lines = new string[] {
+        var lines = new[] {
             "",
             "    [test]",
             "    [additional(info = 37)]",
@@ -101,7 +101,7 @@ public class CsParserTest : CsParser
 
     [Fact]
     public void LineHasAttribute_False() {
-        var lines = new string[] {
+        var lines = new[] {
             "",
             "    [test]",
             "    [additional(info = 37)]",

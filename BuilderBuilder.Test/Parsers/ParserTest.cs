@@ -12,16 +12,16 @@ public class ParserTest : Parser
     // Start and end
     [Fact]
     public void StartsWithTest() {
-        var line = "    testhahaha";
-        var pattern = "test";
+        const string line = "    testhahaha";
+        const string pattern = "test";
         var result = StartsWith(line, pattern);
         Assert.True(result);
     }
 
     [Fact]
     public void EndsWithTest() {
-        var line = "hahahatest    ";
-        var pattern = "test";
+        const string line = "hahahatest    ";
+        const string pattern = "test";
         var result = EndsWith(line, pattern);
         Assert.True(result);
     }
@@ -29,14 +29,14 @@ public class ParserTest : Parser
     // Get pattern match
     [Fact]
     public void GetPatternMatchTest() {
-        var line = "    public class Thingy";
+        const string line = "    public class Thingy";
         var result = GetPatternMatch(line, @"public class (\w+)");
         Assert.Equal("Thingy", result);
     }
 
     [Fact]
     public void GetPatternMatchesTest() {
-        var line = "    public virtual string Thingy";
+        const string line = "    public virtual string Thingy";
         var result = GetPatternMatches(line, @"public virtual (\w+) (\w+)");
 
         Assert.Equal(2, result.Length);

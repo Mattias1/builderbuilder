@@ -2,60 +2,64 @@
 
 public class ImmutableParser : CsParser
 {
-    private BuilderEntity _result;
-    private List<string[]> _parametersOfConstructors;
+    private BuilderEntity _result = null!;
+    private List<string[]> _parametersOfConstructors = new();
 
-    public override BuilderEntity Parse(string[] lines) {
+    public override BuilderEntity Parse(string[] lines)
+    {
         _result = new BuilderEntity(persistable: false);
         _parametersOfConstructors = new List<string[]>();
 
-        for (var i = 0; i < lines.Length; i++) {
+        for (var i = 0; i < lines.Length; i++)
+        {
             var line = lines[i];
 
-            parseName(lines, i, line);
-            parseConstructor(lines, i, line);
+            ParseName(line);
+            ParseConstructor(lines, i);
         }
 
-        var parameters = getLastConstructorWithMostParameters();
-        addFields(parameters);
+        var parameters = GetLastConstructorWithMostParameters();
+        AddFields(parameters);
 
         return _result;
     }
 
-    private void parseName(string[] lines, int i, string line) {
-        const string classOrStuctPattern = @"^\s*(?:public\s+)?(?:readonly\s+)?(?:class|struct)\s+(\w+)";
+    private void ParseName(string line)
+    {
+        const string classOrStructPattern = @"^\s*(?:public\s+)?(?:readonly\s+)?(?:class|struct)\s+(\w+)";
 
-        if (MatchesPattern(line, classOrStuctPattern)) {
-            _result.Name = GetPatternMatch(line, classOrStuctPattern);
+        if (MatchesPattern(line, classOrStructPattern))
+        {
+            _result.Name = GetPatternMatch(line, classOrStructPattern);
         }
     }
 
-    private void parseConstructor(string[] lines, int i, string line) {
+    private void ParseConstructor(string[] lines, int i)
+    {
         var constructorParameters = ParseConstructor(lines, i, _result.Name);
-        if (constructorParameters != null) {
+        if (constructorParameters != null)
+        {
             var parameters = constructorParameters.Split(',').Select(p => p.Trim()).ToArray();
             _parametersOfConstructors.Add(parameters);
         }
     }
 
-    private string[] getLastConstructorWithMostParameters() {
-        var mostParameters = 0;
-        var result = new string[0];
-        foreach (var parameters in _parametersOfConstructors) {
-            if (parameters.Length >= mostParameters) {
-                mostParameters = parameters.Length;
-                result = parameters;
-            }
-        }
-        return result;
+    private IEnumerable<string> GetLastConstructorWithMostParameters()
+    {
+        var mostParameters = _parametersOfConstructors.Max(p => p.Length);
+        return _parametersOfConstructors.Last(p => p.Length == mostParameters);
     }
 
-    private void addFields(string[] constructorParameters) {
-        foreach (var bothParameters in constructorParameters) {
-            var split = bothParameters.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (split.Length < 2) {
+    private void AddFields(IEnumerable<string> constructorParameters)
+    {
+        foreach (var bothParameters in constructorParameters)
+        {
+            var split = bothParameters.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length < 2)
+            {
                 continue;
             }
+
             _result.Fields.Add(new Field(split[0], UpperFirst(split[1])));
         }
     }

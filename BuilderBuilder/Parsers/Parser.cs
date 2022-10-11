@@ -8,48 +8,57 @@ public abstract class Parser
 
     public abstract BuilderEntity Parse(string[] lines);
 
-    protected bool StartsWith(string line, string start) {
+    protected bool StartsWith(string line, string start)
+    {
         return MatchesPattern(line, $@"^\s*{start}");
     }
 
-    protected bool EndsWith(string line, string end) {
+    protected bool EndsWith(string line, string end)
+    {
         return MatchesPattern(line, $@"{end}\s*$");
     }
 
-    protected bool MatchesPattern(string line, string pattern) {
+    protected bool MatchesPattern(string line, string pattern)
+    {
         return new Regex(pattern).IsMatch(line);
     }
 
-    protected string GetPatternMatch(string line, string pattern, int groupNr = 1) {
+    protected static string GetPatternMatch(string line, string pattern, int groupNr = 1)
+    {
         var matches = new Regex(pattern).Matches(line, 0);
         if (matches.Count == 0)
-            return null;
+            return string.Empty;
         var groups = matches[0].Groups;
 
-        if (groups.Count <= groupNr)
-            return null;
-        return groups[groupNr].Value;
+        return groups.Count > groupNr
+            ? groups[groupNr].Value
+            : string.Empty;
     }
 
-    protected string[] GetPatternMatches(string line, string pattern, params int[] groupNrs) {
+    protected static string[] GetPatternMatches(string line, string pattern, params int[] groupNrs)
+    {
         var matches = new Regex(pattern).Matches(line, 0);
         if (matches.Count == 0)
-            return null;
+        {
+            return Array.Empty<string>();
+        }
         var groups = matches[0].Groups;
 
         var result = new string[groupNrs.Length > 0 ? groupNrs.Length : groups.Count - 1];
         var r = 0;
-        for (var i = 1; i < groups.Count; i++) {
-            if (groupNrs.Length == 0 || groupNrs.Contains(i)) {
+        for (var i = 1; i < groups.Count; i++)
+        {
+            if (groupNrs.Length == 0 || groupNrs.Contains(i))
+            {
                 result[r++] = groups[i].Value;
             }
         }
+
         return result;
     }
 
-    protected string[] SplitLines(string input) {
-        return input
+    private static string[] SplitLines(string input) =>
+        input
             .Replace("\r\n", "\n")
-            .Split(new char[] { '\n' });
-    }
+            .Split(new[] { '\n' });
 }

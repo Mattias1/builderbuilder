@@ -2,16 +2,15 @@
 
 public abstract class CsParser : Parser
 {
-    private const string ATTRIBUTE_INSIDE = @"\s*[a-zA-Z_].*";
-
-    private string TYPE => @"[a-zA-Z0-9_<>?]";
+    private const string AttributeInside = @"\s*[a-zA-Z_].*";
+    private const string Type = @"[a-zA-Z0-9_<>?]";
 
     protected bool IsAttributeLine(string line) {
-        return MatchesPattern(line, $@"^\s*\[{ATTRIBUTE_INSIDE}\]");
+        return MatchesPattern(line, $@"^\s*\[{AttributeInside}\]");
     }
 
     protected bool IsAttribute(string line, string attribute) {
-        return MatchesPattern(line, $@"^\s*\[({ATTRIBUTE_INSIDE},\s*)*\s*{attribute}\s*(\(.*\))?\s*(\s*,{ATTRIBUTE_INSIDE})*\]");
+        return MatchesPattern(line, $@"^\s*\[({AttributeInside},\s*)*\s*{attribute}\s*(\(.*\))?\s*(\s*,{AttributeInside})*\]");
     }
 
     protected bool LineHasAttribute(string[] lines, int index, string attribute) {
@@ -39,38 +38,43 @@ public abstract class CsParser : Parser
     private (string type, string name)? ParsePublicField(string line, bool forceVirtual) {
         var fieldPattern = @"public\s+" +
                            (forceVirtual ? @"virtual\s+" : @"(?:virtual\s+|override\s+)?") +
-                           $@"({TYPE}+)\s+(\w+)\s*" +
+                           $@"({Type}+)\s+(\w+)\s*" +
                            @"(\()?" +
                            @"(?:\{\s*get;\s*set;\s*\})?";
 
-        if (MatchesPattern(line, fieldPattern)) {
-            var values = GetPatternMatches(line, fieldPattern);
-            if (values[0] == "class" || (values.Length >= 3 && values[2] == "(")) {
-                return null;
-            }
-            return (values[0], values[1]);
+        if (!MatchesPattern(line, fieldPattern))
+        {
+            return null;
         }
-        return null;
+
+        var values = GetPatternMatches(line, fieldPattern);
+        if (values[0] == "class" || (values.Length >= 3 && values[2] == "(")) {
+            return null;
+        }
+        return (values[0], values[1]);
     }
 
-    public string ParseConstructor(string[] lines, int index, string name) {
+    protected string? ParseConstructor(string[] lines, int index, string name) {
         var startPattern = $@"public\s+{name}\s*\(";
         var firstParamsPattern = $@"public\s+{name}\s*\(([^)]*)";
-        var paramsPattern = @"([^)]*)";
-        var endPattern = @"\)";
+        const string paramsPattern = @"([^)]*)";
+        const string endPattern = @"\)";
 
-        if (MatchesPattern(lines[index], startPattern)) {
-            var result = MatchesPattern(lines[index], firstParamsPattern) ? GetPatternMatch(lines[index], firstParamsPattern) : "";
-            if (MatchesPattern(lines[index], endPattern)) {
+        if (!MatchesPattern(lines[index], startPattern))
+        {
+            return null;
+        }
+
+        var result = MatchesPattern(lines[index], firstParamsPattern) ? GetPatternMatch(lines[index], firstParamsPattern) : "";
+        if (MatchesPattern(lines[index], endPattern)) {
+            return result;
+        }
+
+        for (var i = index + 1; i < lines.Length; i++) {
+            var line = lines[i];
+            result += MatchesPattern(line, paramsPattern) ? GetPatternMatch(line, paramsPattern) : "";
+            if (MatchesPattern(line, endPattern)) {
                 return result;
-            }
-
-            for (var i = index + 1; i < lines.Length; i++) {
-                var line = lines[i];
-                result += MatchesPattern(line, paramsPattern) ? GetPatternMatch(line, paramsPattern) : "";
-                if (MatchesPattern(line, endPattern)) {
-                    return result;
-                }
             }
         }
         return null;
