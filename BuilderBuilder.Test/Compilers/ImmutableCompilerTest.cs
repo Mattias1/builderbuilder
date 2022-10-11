@@ -1,30 +1,32 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BuilderBuilder.Compilers;
+using Xunit;
 
-namespace BuilderBuilder.Test
+namespace BuilderBuilder.Test.Compilers;
+
+public class ImmutableCompilerTest
 {
-    [TestClass]
-    public class ImmutableCompilerTest
-    {
-        private ImmutableCompiler Compiler => new ImmutableCompiler();
+    private ImmutableCompiler Compiler => new();
 
-        [TestMethod]
-        public void Compile_NonPersistExample() {
-            var input = new BuilderEntity(persistable: false);
-            input.Name = "ExampleEntity";
-            input.Fields.Add(new Field("long?", "Id"));
-            input.Fields.Add(new Field("string", "Name"));
-            input.Fields.Add(new Field("Brother", "Twin"));
-            input.Fields.Add(new Field("Parent", "Mom"));
-            input.Fields.Add(new Field("List<Child>", "Kids"));
-            input.Fields.Add(new Field("List<Parent>", "Parents"));
+    [Fact]
+    public void Compile_NonPersistExample() {
+        var input = new BuilderEntity(persistable: false)
+        {
+            Name = "ExampleEntity"
+        };
+        input.Fields.Add(new Field("long?", "Id"));
+        input.Fields.Add(new Field("string", "Name"));
+        input.Fields.Add(new Field("Brother", "Twin"));
+        input.Fields.Add(new Field("Parent", "Mom"));
+        input.Fields.Add(new Field("List<Child>", "Kids"));
+        input.Fields.Add(new Field("List<Parent>", "Parents"));
 
-            string result = Compiler.Compile(input);
+        var result = Compiler.Compile(input);
 
-            AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
-        }
+        AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
+    }
 
-        private string NonPersistExampleOutput {
-            get => @"                using ...
+    private string NonPersistExampleOutput =>
+        @"                using ...
 
                 namespace ...
                 {
@@ -110,6 +112,4 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
-    }
 }

@@ -1,24 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BuilderBuilder.Parsers;
+using Xunit;
 
-namespace BuilderBuilder.Test
+namespace BuilderBuilder.Test.Parsers;
+
+public class PlainCsClassParserTest
 {
-    [TestClass]
-    public class PlainCsClassParserTest
-    {
-        private Parser Parser => new PlainCsClassParser();
+    private Parser Parser => new PlainCsClassParser();
 
-        [TestMethod]
-        public void Parse_Example() {
-            BuilderEntity result = Parser.Parse(ExampleInput);
+    [Fact]
+    public void Parse_Example() {
+        var result = Parser.Parse(ExampleInput);
 
-            AssertHelper.AssertBuilderEntity(result, "ExampleEntity", false,
-                ("long?", "Id"),
-                ("My_class_123", "My_name_123"),
-                ("IEnumerable<Stuff>", "Stuffs"));
-        }
+        AssertHelper.AssertBuilderEntity(result, "ExampleEntity", false,
+            ("long?", "Id"),
+            ("My_class_123", "My_name_123"),
+            ("IEnumerable<Stuff>", "Stuffs"));
+    }
 
-        private string ExampleInput {
-            get => @"
+    private string ExampleInput =>
+        @"
                 using ...
 
                 namespace ...
@@ -39,6 +39,4 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
-    }
 }

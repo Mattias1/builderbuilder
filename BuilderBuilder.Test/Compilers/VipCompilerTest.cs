@@ -1,30 +1,32 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BuilderBuilder.Compilers;
+using Xunit;
 
-namespace BuilderBuilder.Test
+namespace BuilderBuilder.Test.Compilers;
+
+public class VipCompilerTest
 {
-    [TestClass]
-    public class VipCompilerTest
-    {
-        private VipCompiler Compiler => new VipCompiler();
+    private VipCompiler Compiler => new();
 
-        [TestMethod]
-        public void Compile_PersistExample() {
-            var input = new BuilderEntity(persistable: true);
-            input.Name = "ExampleEntity";
-            input.Fields.Add(new Field("long?", "Id"));
-            input.Fields.Add(new Field("string", "Name"));
-            input.Fields.Add(new Field("Brother", "Twin", Field.InverseHandlingType.OneToOne));
-            input.Fields.Add(new Field("Parent", "Mom", Field.InverseHandlingType.ManyToOne));
-            input.Fields.Add(new Field("List<Child>", "Kids", Field.InverseHandlingType.OneToMany));
-            input.Fields.Add(new Field("List<Parent>", "Parents", Field.InverseHandlingType.ManyToMany));
+    [Fact]
+    public void Compile_PersistExample() {
+        var input = new BuilderEntity(persistable: true)
+        {
+            Name = "ExampleEntity"
+        };
+        input.Fields.Add(new Field("long?", "Id"));
+        input.Fields.Add(new Field("string", "Name"));
+        input.Fields.Add(new Field("Brother", "Twin", Field.InverseHandlingType.OneToOne));
+        input.Fields.Add(new Field("Parent", "Mom", Field.InverseHandlingType.ManyToOne));
+        input.Fields.Add(new Field("List<Child>", "Kids", Field.InverseHandlingType.OneToMany));
+        input.Fields.Add(new Field("List<Parent>", "Parents", Field.InverseHandlingType.ManyToMany));
 
-            string result = Compiler.Compile(input);
+        var result = Compiler.Compile(input);
 
-            AssertHelper.AssertMultilineStringEq(PersistExampleOutput, result);
-        }
+        AssertHelper.AssertMultilineStringEq(PersistExampleOutput, result);
+    }
 
-        private string PersistExampleOutput {
-            get => @"                using ...
+    private string PersistExampleOutput =>
+        @"                using ...
 
                 namespace VipLive.WebApplication.VIPLive.Test. ...
                 {
@@ -97,25 +99,26 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
 
-        [TestMethod]
-        public void Compile_NonPersistExample() {
-            var input = new BuilderEntity(persistable: false);
-            input.Name = "ExampleEntity";
-            input.Fields.Add(new Field("string", "Name"));
-            input.Fields.Add(new Field("Brother", "Twin"));
-            input.Fields.Add(new Field("Parent", "Mom"));
-            input.Fields.Add(new Field("List<Child>", "Kids"));
-            input.Fields.Add(new Field("List<Parent>", "Parents"));
+    [Fact]
+    public void Compile_NonPersistExample() {
+        var input = new BuilderEntity(persistable: false)
+        {
+            Name = "ExampleEntity"
+        };
+        input.Fields.Add(new Field("string", "Name"));
+        input.Fields.Add(new Field("Brother", "Twin"));
+        input.Fields.Add(new Field("Parent", "Mom"));
+        input.Fields.Add(new Field("List<Child>", "Kids"));
+        input.Fields.Add(new Field("List<Parent>", "Parents"));
 
-            string result = Compiler.Compile(input);
+        var result = Compiler.Compile(input);
 
-            AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
-        }
+        AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
+    }
 
-        private string NonPersistExampleOutput {
-            get => @"                using ...
+    private string NonPersistExampleOutput =>
+        @"                using ...
 
                 namespace VipLive.WebApplication.VIPLive.Test. ...
                 {
@@ -166,6 +169,4 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
-    }
 }

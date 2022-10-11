@@ -1,81 +1,78 @@
-﻿using System.Collections.Generic;
+﻿namespace BuilderBuilder.Parsers;
 
-namespace BuilderBuilder
+public abstract class CsParser : Parser
 {
-    public abstract class CsParser : Parser
-    {
-        private const string ATTRIBUTE_INSIDE = @"\s*[a-zA-Z_].*";
+    private const string ATTRIBUTE_INSIDE = @"\s*[a-zA-Z_].*";
 
-        private string TYPE => @"[a-zA-Z0-9_<>?]";
+    private string TYPE => @"[a-zA-Z0-9_<>?]";
 
-        protected bool IsAttributeLine(string line) {
-            return MatchesPattern(line, $@"^\s*\[{ATTRIBUTE_INSIDE}\]");
-        }
+    protected bool IsAttributeLine(string line) {
+        return MatchesPattern(line, $@"^\s*\[{ATTRIBUTE_INSIDE}\]");
+    }
 
-        protected bool IsAttribute(string line, string attribute) {
-            return MatchesPattern(line, $@"^\s*\[({ATTRIBUTE_INSIDE},\s*)*\s*{attribute}\s*(\(.*\))?\s*(\s*,{ATTRIBUTE_INSIDE})*\]");
-        }
+    protected bool IsAttribute(string line, string attribute) {
+        return MatchesPattern(line, $@"^\s*\[({ATTRIBUTE_INSIDE},\s*)*\s*{attribute}\s*(\(.*\))?\s*(\s*,{ATTRIBUTE_INSIDE})*\]");
+    }
 
-        protected bool LineHasAttribute(string[] lines, int index, string attribute) {
-            for (int i = index - 1; i >= 0; i--) {
-                string line = lines[i];
-                if (!IsAttributeLine(line)) {
-                    return false;
-                }
-
-                if (IsAttribute(line, attribute)) {
-                    return true;
-                }
+    protected bool LineHasAttribute(string[] lines, int index, string attribute) {
+        for (var i = index - 1; i >= 0; i--) {
+            var line = lines[i];
+            if (!IsAttributeLine(line)) {
+                return false;
             }
-            return false;
-        }
 
-        protected (string type, string name)? ParsePublicField(string line) {
-            return ParsePublicField(line, false);
-        }
-
-        protected (string type, string name)? ParsePublicVirtualField(string line) {
-            return ParsePublicField(line, true);
-        }
-
-        private (string type, string name)? ParsePublicField(string line, bool forceVirtual) {
-            string fieldPattern = @"public\s+" +
-                (forceVirtual ? @"virtual\s+" : @"(?:virtual\s+|override\s+)?") +
-                $@"({TYPE}+)\s+(\w+)\s*" +
-                @"(\()?" +
-                @"(?:\{\s*get;\s*set;\s*\})?";
-
-            if (MatchesPattern(line, fieldPattern)) {
-                string[] values = GetPatternMatches(line, fieldPattern);
-                if (values[0] == "class" || (values.Length >= 3 && values[2] == "(")) {
-                    return null;
-                }
-                return (values[0], values[1]);
+            if (IsAttribute(line, attribute)) {
+                return true;
             }
-            return null;
         }
+        return false;
+    }
 
-        public string ParseConstructor(string[] lines, int index, string name) {
-            string startPattern = $@"public\s+{name}\s*\(";
-            string firstParamsPattern = $@"public\s+{name}\s*\(([^)]*)";
-            string paramsPattern = @"([^)]*)";
-            string endPattern = @"\)";
+    protected (string type, string name)? ParsePublicField(string line) {
+        return ParsePublicField(line, false);
+    }
 
-            if (MatchesPattern(lines[index], startPattern)) {
-                string result = MatchesPattern(lines[index], firstParamsPattern) ? GetPatternMatch(lines[index], firstParamsPattern) : "";
-                if (MatchesPattern(lines[index], endPattern)) {
+    protected (string type, string name)? ParsePublicVirtualField(string line) {
+        return ParsePublicField(line, true);
+    }
+
+    private (string type, string name)? ParsePublicField(string line, bool forceVirtual) {
+        var fieldPattern = @"public\s+" +
+                           (forceVirtual ? @"virtual\s+" : @"(?:virtual\s+|override\s+)?") +
+                           $@"({TYPE}+)\s+(\w+)\s*" +
+                           @"(\()?" +
+                           @"(?:\{\s*get;\s*set;\s*\})?";
+
+        if (MatchesPattern(line, fieldPattern)) {
+            var values = GetPatternMatches(line, fieldPattern);
+            if (values[0] == "class" || (values.Length >= 3 && values[2] == "(")) {
+                return null;
+            }
+            return (values[0], values[1]);
+        }
+        return null;
+    }
+
+    public string ParseConstructor(string[] lines, int index, string name) {
+        var startPattern = $@"public\s+{name}\s*\(";
+        var firstParamsPattern = $@"public\s+{name}\s*\(([^)]*)";
+        var paramsPattern = @"([^)]*)";
+        var endPattern = @"\)";
+
+        if (MatchesPattern(lines[index], startPattern)) {
+            var result = MatchesPattern(lines[index], firstParamsPattern) ? GetPatternMatch(lines[index], firstParamsPattern) : "";
+            if (MatchesPattern(lines[index], endPattern)) {
+                return result;
+            }
+
+            for (var i = index + 1; i < lines.Length; i++) {
+                var line = lines[i];
+                result += MatchesPattern(line, paramsPattern) ? GetPatternMatch(line, paramsPattern) : "";
+                if (MatchesPattern(line, endPattern)) {
                     return result;
                 }
-
-                for (int i = index + 1; i < lines.Length; i++) {
-                    string line = lines[i];
-                    result += MatchesPattern(line, paramsPattern) ? GetPatternMatch(line, paramsPattern) : "";
-                    if (MatchesPattern(line, endPattern)) {
-                        return result;
-                    }
-                }
             }
-            return null;
         }
+        return null;
     }
 }
