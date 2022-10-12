@@ -10,14 +10,14 @@ public class NhibernateParser : CsParser
         for (var i = 0; i < lines.Length; i++) {
             var line = lines[i];
 
-            parseName(lines, i, line);
-            parseField(lines, i, line);
+            ParseName(lines, i, line);
+            ParseField(lines, i, line);
         }
 
         return _result;
     }
 
-    private void parseName(string[] lines, int i, string line) {
+    private void ParseName(string[] lines, int i, string line) {
         const string classPattern = @"^\s*public\s+class\s+(\w+)";
 
         if (MatchesPattern(line, classPattern) && LineHasAttribute(lines, i, "Class")) {
@@ -25,26 +25,29 @@ public class NhibernateParser : CsParser
         }
     }
 
-    private void parseField(string[] lines, int i, string line) {
+    private void ParseField(string[] lines, int i, string line) {
         var field = ParsePublicVirtualField(line);
-        if (field != null && LineHasParsableAttribute(lines, i)) {
-            var inverseType = Field.InverseHandlingType.None;
-
-            if (LineHasOneToOneAttribute(lines, i)) {
-                inverseType = Field.InverseHandlingType.OneToOne;
-            }
-            if (LineHasManyToOneAttribute(lines, i)) {
-                inverseType = Field.InverseHandlingType.ManyToOne;
-            }
-            if (LineHasOneToManyAttribute(lines, i)) {
-                inverseType = Field.InverseHandlingType.OneToMany;
-            }
-            if (LineHasManyToManyAttribute(lines, i)) {
-                inverseType = Field.InverseHandlingType.ManyToMany;
-            }
-
-            _result.Fields.Add(new Field(field.Value.type, field.Value.name, inverseType));
+        if (field == null || !LineHasParsableAttribute(lines, i))
+        {
+            return;
         }
+
+        var inverseType = Field.InverseHandlingType.None;
+
+        if (LineHasOneToOneAttribute(lines, i)) {
+            inverseType = Field.InverseHandlingType.OneToOne;
+        }
+        if (LineHasManyToOneAttribute(lines, i)) {
+            inverseType = Field.InverseHandlingType.ManyToOne;
+        }
+        if (LineHasOneToManyAttribute(lines, i)) {
+            inverseType = Field.InverseHandlingType.OneToMany;
+        }
+        if (LineHasManyToManyAttribute(lines, i)) {
+            inverseType = Field.InverseHandlingType.ManyToMany;
+        }
+
+        _result.Fields.Add(new Field(field.Value.type, field.Value.name, inverseType));
     }
 
     private bool LineHasParsableAttribute(string[] lines, int i) {
