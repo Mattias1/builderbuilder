@@ -5,28 +5,30 @@ namespace BuilderBuilder.Test.Compilers;
 
 public class ImmutableCompilerTest
 {
-    private ImmutableCompiler Compiler => new();
+    private readonly ImmutableCompiler _compiler = new();
 
     [Fact]
     public void Compile_NonPersistExample() {
         var input = new BuilderEntity(persistable: false)
         {
-            Name = "ExampleEntity"
+            Name = "ExampleEntity",
+            Fields =
+            {
+                new Field("long?", "Id"),
+                new Field("string", "Name"),
+                new Field("Brother", "Twin"),
+                new Field("Parent", "Mom"),
+                new Field("List<Child>", "Kids"),
+                new Field("List<Parent>", "Parents")
+            }
         };
-        input.Fields.Add(new Field("long?", "Id"));
-        input.Fields.Add(new Field("string", "Name"));
-        input.Fields.Add(new Field("Brother", "Twin"));
-        input.Fields.Add(new Field("Parent", "Mom"));
-        input.Fields.Add(new Field("List<Child>", "Kids"));
-        input.Fields.Add(new Field("List<Parent>", "Parents"));
 
-        var result = Compiler.Compile(input);
+        var result = _compiler.Compile(input);
 
         AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
     }
 
-    private string NonPersistExampleOutput =>
-        @"                using ...
+    private const string NonPersistExampleOutput = @"                using ...
 
                 namespace ...
                 {

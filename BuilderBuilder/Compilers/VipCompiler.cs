@@ -41,7 +41,10 @@ public class VipCompiler : Compiler
     private void AddExampleBuilder()
     {
         AddLine($"public static {BuilderClass} Builder()");
-        WithBlock(() => { AddLine($"return new {BuilderClass}();"); });
+        WithBlock(() =>
+        {
+            AddLine($"return new {BuilderClass}();");
+        });
     }
 
     private void OpenBuilderClass()
@@ -74,21 +77,22 @@ public class VipCompiler : Compiler
         WithBlock(() =>
         {
             AddLine($"Item.{name} = {localVarName};");
-            if (field.InverseHandling == Field.InverseHandlingType.OneToOne)
+            switch (field.InverseHandling)
             {
-                AddLine($"{localVarName}.{EntityClass} = Item;");
-            }
-
-            if (field.InverseHandling == Field.InverseHandlingType.ManyToOne ||
-                field.InverseHandling == Field.InverseHandlingType.ManyToMany)
-            {
-                AddLine($"{localVarName}.{EntityClass}s.Add(Item);");
-            }
-
-            if (field.InverseHandling == Field.InverseHandlingType.OneToMany)
-            {
-                AddLine($"foreach (var obj in {localVarName})");
-                WithBlock(() => { AddLine($"obj.{EntityClass} = Item;"); });
+                case Field.InverseHandlingType.OneToOne:
+                    AddLine($"{localVarName}.{EntityClass} = Item;");
+                    break;
+                case Field.InverseHandlingType.ManyToOne:
+                case Field.InverseHandlingType.ManyToMany:
+                    AddLine($"{localVarName}.{EntityClass}s.Add(Item);");
+                    break;
+                case Field.InverseHandlingType.OneToMany:
+                    AddLine($"foreach (var obj in {localVarName})");
+                    WithBlock(() =>
+                    {
+                        AddLine($"obj.{EntityClass} = Item;");
+                    });
+                    break;
             }
 
             AddLine("return this;");
@@ -103,7 +107,10 @@ public class VipCompiler : Compiler
         WithBlock(() =>
         {
             AddLine("if (Item.Id is null)");
-            WithBlock(() => { AddLine("WithId(IdGenerator.Next());"); });
+            WithBlock(() =>
+            {
+                AddLine("WithId(IdGenerator.Next());");
+            });
             AddLine("return Build();");
         });
     }
