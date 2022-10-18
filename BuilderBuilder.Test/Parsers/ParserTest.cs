@@ -1,48 +1,46 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using BuilderBuilder.Parsers;
+using Xunit;
 
-namespace BuilderBuilder.Test
+namespace BuilderBuilder.Test.Parsers;
+
+public class ParserTest : Parser
 {
-    [TestClass]
-    public class ParserTest : Parser
-    {
-        public override BuilderEntity Parse(string[] lines) {
-            throw new NotImplementedException();
-        }
+    public override BuilderEntity Parse(string[] lines) {
+        throw new NotImplementedException();
+    }
 
-        // Start and end
-        [TestMethod]
-        public void StartsWithTest() {
-            string line = "    testhahaha";
-            string pattern = "test";
-            bool result = StartsWith(line, pattern);
-            Assert.IsTrue(result);
-        }
+    // Start and end
+    [Fact]
+    public void StartsWithTest() {
+        const string line = "    testhahaha";
+        const string pattern = "test";
+        var result = StartsWith(line, pattern);
+        Assert.True(result);
+    }
 
-        [TestMethod]
-        public void EndsWithTest() {
-            string line = "hahahatest    ";
-            string pattern = "test";
-            bool result = EndsWith(line, pattern);
-            Assert.IsTrue(result);
-        }
+    [Fact]
+    public void EndsWithTest() {
+        const string line = "hahahatest    ";
+        const string pattern = "test";
+        var result = EndsWith(line, pattern);
+        Assert.True(result);
+    }
 
-        // Get pattern match
-        [TestMethod]
-        public void GetPatternMatchTest() {
-            string line = "    public class Thingy";
-            string result = GetPatternMatch(line, @"public class (\w+)");
-            Assert.AreEqual("Thingy", result);
-        }
+    // Get pattern match
+    [Fact]
+    public void GetPatternMatchTest() {
+        const string line = "    public class Thingy";
+        var result = GetPatternMatch(line, @"public class (\w+)");
+        Assert.Equal("Thingy", result);
+    }
 
-        [TestMethod]
-        public void GetPatternMatchesTest() {
-            string line = "    public virtual string Thingy";
-            string[] result = GetPatternMatches(line, @"public virtual (\w+) (\w+)");
+    [Fact]
+    public void GetPatternMatchesTest() {
+        const string line = "    public virtual string Thingy";
+        var result = GetPatternMatches(line, @"public virtual (\w+) (\w+)");
 
-            Assert.AreEqual(2, result.Length);
-            Assert.AreEqual("string", result[0]);
-            Assert.AreEqual("Thingy", result[1]);
-        }
+        Assert.Equal(2, result.Length);
+        Assert.Equal("string", result[0]);
+        Assert.Equal("Thingy", result[1]);
     }
 }

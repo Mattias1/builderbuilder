@@ -1,106 +1,122 @@
-﻿namespace BuilderBuilder
+﻿namespace BuilderBuilder.Compilers;
+
+public class VipCompiler : Compiler
 {
-    public class VipCompiler : Compiler
+    private string EntityClass => BuilderEntity.Name;
+    private string BuilderClass => EntityClass + "Builder";
+
+    protected override void Compile()
     {
-        private string EntityClass => BuilderEntity.Name;
-        private string BuilderClass => EntityClass + "Builder";
+        OpenTestHelperClass();
+        AddExampleBuilder();
 
-        protected override void Compile() {
-            openTestHelperClass();
-            addExampleBuilder();
+        OpenBuilderClass();
+        InitBuilderClass();
 
-            openBuilderClass();
-            initBuilderClass();
-
-            foreach (Field field in BuilderEntity.Fields) {
-                addField(field);
-            }
-
-            if (BuilderEntity.Persistable) {
-                addAutoBuildMethod();
-            }
-
-            closeClasses();
+        foreach (var field in BuilderEntity.Fields)
+        {
+            AddField(field);
         }
 
-        private void openTestHelperClass() {
-            AddLine("using ...");
-            AddEmptyLine();
-
-            AddLine("namespace VipLive.WebApplication.VIPLive.Test. ...");
-            OpenBlock();
-
-            AddLine($"public class {EntityClass}TestHelper");
-            OpenBlock();
+        if (BuilderEntity.Persistable)
+        {
+            AddAutoBuildMethod();
         }
 
-        private void addExampleBuilder() {
-            AddLine($"public static {BuilderClass} Builder()");
-            WithBlock(() => {
-                AddLine($"return new {BuilderClass}();");
-            });
-        }
+        CloseClasses();
+    }
 
-        private void openBuilderClass() {
-            AddEmptyLines(2);
+    private void OpenTestHelperClass()
+    {
+        AddLine("using ...");
+        AddEmptyLine();
 
-            if (BuilderEntity.Persistable) {
-                AddLine($"public class {BuilderClass} : AbstractEntityBuilder<{EntityClass}>");
-            }
-            else {
-                AddLine($"public class {BuilderClass} : AbstractBuilder<{EntityClass}>");
-            }
-            OpenBlock();
-        }
+        AddLine("namespace VipLive.WebApplication.VIPLive.Test. ...");
+        OpenBlock();
 
-        private void initBuilderClass() {
-            AddLine($"public {BuilderClass}() : base() {{ }}");
-            AddEmptyLine();
+        AddLine($"public class {EntityClass}TestHelper");
+        OpenBlock();
+    }
 
-            AddLine($"public {BuilderClass}({EntityClass} {LocalVar(EntityClass)}) : base({LocalVar(EntityClass)}) {{ }}");
-        }
+    private void AddExampleBuilder()
+    {
+        AddLine($"public static {BuilderClass} Builder()");
+        WithBlock(() =>
+        {
+            AddLine($"return new {BuilderClass}();");
+        });
+    }
 
-        private void addField(Field field) {
-            string type = field.Type;
-            string Name = field.Name;
-            string name = LocalVar(field.Name);
+    private void OpenBuilderClass()
+    {
+        AddEmptyLines(2);
 
-            AddEmptyLine();
+        AddLine(BuilderEntity.Persistable
+            ? $"public class {BuilderClass} : AbstractEntityBuilder<{EntityClass}>"
+            : $"public class {BuilderClass} : AbstractBuilder<{EntityClass}>");
+        OpenBlock();
+    }
 
-            AddLine($"public {BuilderClass} With{Name}({type} {name})");
-            WithBlock(() => {
-                AddLine($"Item.{Name} = {name};");
-                if (field.InverseHandling == Field.InverseHandlingType.OneToOne) {
-                    AddLine($"{name}.{EntityClass} = Item;");
-                }
-                if (field.InverseHandling == Field.InverseHandlingType.ManyToOne || field.InverseHandling == Field.InverseHandlingType.ManyToMany) {
-                    AddLine($"{name}.{EntityClass}s.Add(Item);");
-                }
-                if (field.InverseHandling == Field.InverseHandlingType.OneToMany) {
-                    AddLine($"foreach (var obj in {name})");
-                    WithBlock(() => {
+    private void InitBuilderClass()
+    {
+        AddLine($"public {BuilderClass}() : base() {{ }}");
+        AddEmptyLine();
+
+        AddLine($"public {BuilderClass}({EntityClass} {LocalVar(EntityClass)}) : base({LocalVar(EntityClass)}) {{ }}");
+    }
+
+    private void AddField(Field field)
+    {
+        var type = field.Type;
+        var name = field.Name;
+        var localVarName = LocalVar(field.Name);
+
+        AddEmptyLine();
+
+        AddLine($"public {BuilderClass} With{name}({type} {localVarName})");
+        WithBlock(() =>
+        {
+            AddLine($"Item.{name} = {localVarName};");
+            switch (field.InverseHandling)
+            {
+                case Field.InverseHandlingType.OneToOne:
+                    AddLine($"{localVarName}.{EntityClass} = Item;");
+                    break;
+                case Field.InverseHandlingType.ManyToOne:
+                case Field.InverseHandlingType.ManyToMany:
+                    AddLine($"{localVarName}.{EntityClass}s.Add(Item);");
+                    break;
+                case Field.InverseHandlingType.OneToMany:
+                    AddLine($"foreach (var obj in {localVarName})");
+                    WithBlock(() =>
+                    {
                         AddLine($"obj.{EntityClass} = Item;");
                     });
-                }
-                AddLine("return this;");
+                    break;
+            }
+
+            AddLine("return this;");
+        });
+    }
+
+    private void AddAutoBuildMethod()
+    {
+        AddEmptyLine();
+
+        AddLine($"public override {EntityClass} AutoBuild()");
+        WithBlock(() =>
+        {
+            AddLine("if (Item.Id is null)");
+            WithBlock(() =>
+            {
+                AddLine("WithId(IdGenerator.Next());");
             });
-        }
+            AddLine("return Build();");
+        });
+    }
 
-        private void addAutoBuildMethod() {
-            AddEmptyLine();
-
-            AddLine($"public override {EntityClass} AutoBuild()");
-            WithBlock(() => {
-                AddLine($"if (Item.Id is null)");
-                WithBlock(() => {
-                    AddLine("WithId(IdGenerator.Next());");
-                });
-                AddLine("return Build();");
-            });
-        }
-
-        private void closeClasses() {
-            CloseBlocks(3);
-        }
+    private void CloseClasses()
+    {
+        CloseBlocks(3);
     }
 }

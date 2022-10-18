@@ -1,18 +1,17 @@
-﻿using System.Windows.Forms;
+﻿using BuilderBuilder.UI;
 
-namespace BuilderBuilder
+namespace BuilderBuilder;
+
+internal static class Program
 {
-    static class Program
-    {
-        static void Main(string[] args) {
-            Settings.Get.Load();
+    private static void Main(string[] args) {
+        Settings.Get.Load();
 
-            MainForm main = new MainForm();
+        var main = new MainForm();
 
-            Application.EnableVisualStyles();
-            Application.Run(main);
+        Application.EnableVisualStyles();
+        Application.Run(main);
 
-            Settings.Get.Save();
-        }
+        Settings.Get.Save();
     }
 }

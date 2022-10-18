@@ -1,35 +1,38 @@
-﻿namespace BuilderBuilder
+﻿namespace BuilderBuilder.Parsers;
+
+public class PlainCsClassParser : CsParser
 {
-    public class PlainCsClassParser : CsParser
+    private BuilderEntity _result = null!;
+
+    public override BuilderEntity Parse(string[] lines)
     {
-        private BuilderEntity _result;
+        _result = new BuilderEntity(persistable: false);
 
-        public override BuilderEntity Parse(string[] lines) {
-            _result = new BuilderEntity(persistable: false);
-
-            for (int i = 0; i < lines.Length; i++) {
-                string line = lines[i];
-
-                parseName(lines, i, line);
-                parseField(lines, i, line);
-            }
-
-            return _result;
+        foreach (var line in lines)
+        {
+            ParseName(line);
+            ParseField(line);
         }
 
-        private void parseName(string[] lines, int i, string line) {
-            const string classPattern = @"^\s*(?:public\s+)?class\s+(\w+)";
+        return _result;
+    }
 
-            if (MatchesPattern(line, classPattern)) {
-                _result.Name = GetPatternMatch(line, classPattern);
-            }
+    private void ParseName(string line)
+    {
+        const string classPattern = @"^\s*(?:public\s+)?class\s+(\w+)";
+
+        if (MatchesPattern(line, classPattern))
+        {
+            _result.Name = GetPatternMatch(line, classPattern);
         }
+    }
 
-        private void parseField(string[] lines, int i, string line) {
-            var field = ParsePublicField(line);
-            if (field != null) {
-                _result.Fields.Add(new Field(field.Value.type, field.Value.name));
-            }
+    private void ParseField(string line)
+    {
+        var field = ParsePublicField(line);
+        if (field != null)
+        {
+            _result.Fields.Add(new Field(field.Value.type, field.Value.name));
         }
     }
 }

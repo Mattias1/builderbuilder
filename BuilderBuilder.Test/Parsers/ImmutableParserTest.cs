@@ -1,24 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BuilderBuilder.Parsers;
+using Xunit;
 
-namespace BuilderBuilder.Test
+namespace BuilderBuilder.Test.Parsers;
+
+public class ImmutableParserTest
 {
-    [TestClass]
-    public class ImmutableParserTest
-    {
-        private Parser Parser => new ImmutableParser();
+    private Parser Parser => new ImmutableParser();
 
-        [TestMethod]
-        public void Parse_Example() {
-            BuilderEntity result = Parser.Parse(ExampleInput);
+    [Fact]
+    public void Parse_Example() {
+        var result = Parser.Parse(ExampleInput);
 
-            AssertHelper.AssertBuilderEntity(result, "ExampleStruct", false,
-                ("long?", "Id"),
-                ("My_class_123", "My_name_123"),
-                ("IReadOnlyList<Stuff>", "Stuffs"));
-        }
+        AssertHelper.AssertBuilderEntity(result, "ExampleStruct", false,
+            ("long?", "Id"),
+            ("My_class_123", "My_name_123"),
+            ("IReadOnlyList<Stuff>", "Stuffs"));
+    }
 
-        private string ExampleInput {
-            get => @"
+    private string ExampleInput =>
+        @"
                 using ...
 
                 namespace ... {
@@ -42,6 +42,4 @@ namespace BuilderBuilder.Test
                     }
                 }
             ";
-        }
-    }
 }

@@ -1,17 +1,15 @@
-﻿using System.Linq;
-using MattyControls;
+﻿using MattyControls;
 
-namespace BuilderBuilder
+namespace BuilderBuilder;
+
+internal class Settings : SettingsSingleton
 {
-    class Settings : SettingsSingleton
-    {
-        protected override string Name => "BuilderBuilder";
+    protected override string Name => "BuilderBuilder";
 
-        public static Settings Get => GetSingleton<Settings>();
+    public static Settings Get => GetSingleton<Settings>();
 
-        public Framework SelectedFramework {
-            get { return Frameworks.FromSlug(get("selected-framework", Frameworks.All.First().Slug)); }
-            set { set("selected-framework", value.Slug); }
-        }
+    public Framework SelectedFramework {
+        get => Frameworks.FromSlug(get("selected-framework", Frameworks.All.First().Slug));
+        set => set("selected-framework", value.Slug);
     }
 }
