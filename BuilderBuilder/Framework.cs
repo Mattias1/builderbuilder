@@ -1,4 +1,5 @@
-﻿using BuilderBuilder.Compilers;
+﻿using AvaloniaExtensions;
+using BuilderBuilder.Compilers;
 using BuilderBuilder.Parsers;
 
 namespace BuilderBuilder;
@@ -27,7 +28,7 @@ internal static class Frameworks {
   }
 }
 
-internal class Framework {
+internal class Framework : IControlContentItem {
   public string Name { get; }
   public string Slug { get; }
 
@@ -40,4 +41,6 @@ internal class Framework {
     Parser = parser;
     Compiler = compiler;
   }
+
+  public string ControlContent() => Name;
 }

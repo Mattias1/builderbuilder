@@ -1,52 +1,48 @@
-﻿using MattyControls;
+﻿using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.Markup.Declarative;
+using AvaloniaExtensions;
 
 namespace BuilderBuilder.UI;
 
-internal class MainControl : MattyUserControl {
-  private readonly Db _dbFramework;
-  private readonly RichTb _tbInput, _tbOutput;
+internal class MainControl : CanvasComponentBase {
+  private Settings Settings => GetSettings<Settings>();
 
-  public MainControl() {
-    _dbFramework = new Db(this);
-    _dbFramework.SelectedIndexChanged += OnFrameworkChange;
-    foreach (var framework in Frameworks.All) {
-      _dbFramework.Items.Add(framework.Name);
-    }
+  private TextBox _tbInput = null!;
+  private TextBox _tbOutput = null!;
+  private ExtendedComboBox<Framework> _cbFramework = null!;
 
-    _dbFramework.SelectedIndex = Frameworks.IndexOf(Settings.Get.SelectedFramework);
-    _dbFramework.SelectedIndexChanged += OnInputChange;
+  protected override void InitializeControls() {
+    _cbFramework = AddComboBox(Frameworks.All, OnFrameworkChange).TopRightInPanel();
 
-    _tbInput = new RichTb(this);
-    _tbInput.Multiline = true;
-    _tbInput.TextChanged += OnInputChange;
-    _tbInput.AddLabel("Input:", false);
-
-    _tbOutput = new RichTb(this);
-    _tbOutput.Multiline = true;
-    _tbOutput.AddLabel("Output:", false);
+    _tbInput = AddMultilineTextBox().OnTextChanged(OnInputChange).XLeftInPanel().YBelow(_cbFramework)
+        .StretchDownInPanel().StretchFractionRightInPanel(1, 2);
+    _tbOutput = AddMultilineTextBox().RightOf(_tbInput).StretchDownInPanel().StretchRightInPanel();
+    AddLabel("Input:", _tbInput).Above(_tbInput);
+    AddLabel("Output:", _tbOutput).Above(_tbOutput);
+    _tbInput.Focus();
   }
 
-  public override void OnResize() {
-    _dbFramework.PositionTopRightInside(this);
-
-    _tbInput.PositionBelow(_dbFramework);
-    _tbInput.StretchDownInside(this);
-
-    ControlHelpers.StretchControlsHorizontallyInside(this, _tbInput, _tbOutput);
-    _tbInput.Label.PositionAbove(_tbInput);
-    _tbOutput.Label.PositionAbove(_tbOutput);
+  protected override void OnLoaded(RoutedEventArgs e) {
+    base.OnLoaded(e);
+    _cbFramework.SelectedIndex = Frameworks.IndexOf(Settings.SelectedFramework);
+    _tbInput.Focus();
   }
 
-  public override void OnShow() {
-    _tbInput.Select();
+  protected override void OnGotFocus(GotFocusEventArgs e) {
+    base.OnGotFocus(e);
+    _tbInput.Focus();
   }
 
-  private void OnFrameworkChange(object? o, EventArgs e) {
-    Settings.Get.SelectedFramework = Frameworks.All[_dbFramework.SelectedIndex];
+  private void OnFrameworkChange(SelectedItemChangedEventArgs<Framework> e) {
+    Settings.SelectedFramework = e.SelectedItem;
+
+    OnInputChange(e);
   }
 
-  private void OnInputChange(object? o, EventArgs e) {
-    _tbOutput.Text = BuildBuilder(_tbInput.Text, Settings.Get.SelectedFramework);
+  private void OnInputChange(RoutedEventArgs e) {
+    _tbOutput.Text = BuildBuilder(_tbInput.Text ?? "", Settings.SelectedFramework);
   }
 
   private static string BuildBuilder(string input, Framework framework) {

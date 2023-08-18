@@ -1,14 +1,13 @@
-﻿using MattyControls;
+﻿using System.Text.Json.Serialization;
 
 namespace BuilderBuilder;
 
-internal class Settings : SettingsSingleton {
-  protected override string Name => "BuilderBuilder";
+internal class Settings {
+  public string SelectedFrameworkString { get; set; } = Frameworks.All[0].Slug;
 
-  public static Settings Get => GetSingleton<Settings>();
-
+  [JsonIgnore]
   public Framework SelectedFramework {
-    get => Frameworks.FromSlug(get("selected-framework", Frameworks.All.First().Slug));
-    set => set("selected-framework", value.Slug);
+    get => Frameworks.FromSlug(SelectedFrameworkString);
+    set => SelectedFrameworkString = value.Slug;
   }
 }

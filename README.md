@@ -1,14 +1,21 @@
-# builderbuilder
-Generate code for my unit-test builders.
-It's not perfect as you have to fix the usings and namespaces and such yourselves, but it should save you quite some typing.
+BuilderBuilder
+===============
+NOTE - THIS README IS OUT OF DATE - TODO
 
-## Prerequisite
+A little tool to generate code for my unit-test builders.
+It's not perfect as you have to fix the usings and namespaces and such yourselves, but it should save quite some typing.
+
+
+Prerequisite
+-------------
 It expects the `AbstractBuilder` and `AbstractEntityBuilder` base classes and an `IdGenerator` to exist in your project.
 You can copy the ones in this repo if you want.
 
-## Example
+
+Example
+--------
 This tool will take an entity, for example:
-```
+``` csharp
 using ...
 
 namespace ...
@@ -34,10 +41,10 @@ namespace ...
 ```
 
 And turn it into a builder:
-```
+``` csharp
 using ...
 
-namespace Declaratiegeneratie.WebApplication.VIPLive.Test. ...
+namespace VipLive.WebApplication.VIPLive.Test. ...
 {
     public class ExampleEntityTestHelper
     {
@@ -47,45 +54,45 @@ namespace Declaratiegeneratie.WebApplication.VIPLive.Test. ...
         }
 
 
-        public class ExampleEntityBuilder
+        public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
         {
-            private ExampleEntity _exampleEntity;
+            public ExampleEntityBuilder() : base() { }
 
-            public ExampleEntityBuilder() : this(new ExampleEntity()) { }
-
-            public ExampleEntityBuilder(ExampleEntity exampleEntity)
-            {
-                _exampleEntity = exampleEntity;
-            }
+            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
 
             public ExampleEntityBuilder WithId(long? id)
             {
-                _exampleEntity.Id = id;
+                Item.Id = id;
                 return this;
             }
 
             public ExampleEntityBuilder WithName(string name)
             {
-                _exampleEntity.Name = name;
+                Item.Name = name;
                 return this;
             }
 
-            public ExampleEntity Build()
+            public ExampleEntityBuilder WithStuffs(IEnumerable<Stuff> stuffs)
             {
-                return _exampleEntity;
+                Item.Stuffs = stuffs;
+                stuffs.ExampleEntitys.Add(Item);
+                return this;
             }
 
-            public ExampleEntity Persist(DeclaratiegeneratieZorggroepenDbTest context)
+            public override ExampleEntity AutoBuild()
             {
-                SaveToDatabase(context);
+                if (Item.Id is null)
+                {
+                    WithId(IdGenerator.Next());
+                }
                 return Build();
-            }
-
-            private void SaveToDatabase(DeclaratiegeneratieZorggroepenDbTest context)
-            {
-                context.SaveToDatabase(_exampleEntity);
             }
         }
     }
 }
 ```
+
+
+Setup development environment
+------------------------------
+Install the dotnet 7 SDK and run with `dotnet run --project BuilderBuilder`.
