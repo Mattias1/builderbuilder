@@ -3,32 +3,29 @@ using Xunit;
 
 namespace BuilderBuilder.Test.Compilers;
 
-public class ImmutableCompilerTest
-{
-    private readonly ImmutableCompiler _compiler = new();
+public class ImmutableCompilerTest {
+  private readonly ImmutableCompiler _compiler = new();
 
-    [Fact]
-    public void Compile_NonPersistExample() {
-        var input = new BuilderEntity(persistable: false)
-        {
-            Name = "ExampleEntity",
-            Fields =
-            {
-                new Field("long?", "Id"),
-                new Field("string", "Name"),
-                new Field("Brother", "Twin"),
-                new Field("Parent", "Mom"),
-                new Field("List<Child>", "Kids"),
-                new Field("List<Parent>", "Parents")
-            }
-        };
+  [Fact]
+  public void Compile_NonPersistExample() {
+    var input = new BuilderEntity(persistable: false) {
+        Name = "ExampleEntity",
+        Fields = {
+            new Field("long?", "Id"),
+            new Field("string", "Name"),
+            new Field("Brother", "Twin"),
+            new Field("Parent", "Mom"),
+            new Field("List<Child>", "Kids"),
+            new Field("List<Parent>", "Parents")
+        }
+    };
 
-        var result = _compiler.Compile(input);
+    var result = _compiler.Compile(input);
 
-        AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
-    }
+    AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
+  }
 
-    private const string NonPersistExampleOutput = @"                using ...
+  private const string NonPersistExampleOutput = @"                using ...
 
                 namespace ...
                 {

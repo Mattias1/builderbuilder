@@ -3,27 +3,26 @@ using Xunit;
 
 namespace BuilderBuilder.Test.Parsers;
 
-public class NhibernateParserTest
-{
-    private Parser Parser => new NhibernateParser();
+public class NhibernateParserTest {
+  private Parser Parser => new NhibernateParser();
 
-    [Fact]
-    public void Parse_Example() {
-        var result = Parser.Parse(ExampleInput);
+  [Fact]
+  public void Parse_Example() {
+    var result = Parser.Parse(ExampleInput);
 
-        AssertHelper.AssertBuilderEntity(result, "ExampleEntity", true,
-            ("long?", "Id", Field.InverseHandlingType.None),
-            ("string", "Name", Field.InverseHandlingType.None),
-            ("My_class_123", "My_name_123", Field.InverseHandlingType.None),
-            ("Brother", "Twin", Field.InverseHandlingType.OneToOne),
-            ("Parent", "Mom", Field.InverseHandlingType.ManyToOne),
-            ("IEnumerable<Child>", "Kids", Field.InverseHandlingType.OneToMany),
-            ("IEnumerable<Parent>", "Parents", Field.InverseHandlingType.ManyToMany)
-        );
-    }
+    AssertHelper.AssertBuilderEntity(result, "ExampleEntity", true,
+        ("long?", "Id", Field.InverseHandlingType.None),
+        ("string", "Name", Field.InverseHandlingType.None),
+        ("My_class_123", "My_name_123", Field.InverseHandlingType.None),
+        ("Brother", "Twin", Field.InverseHandlingType.OneToOne),
+        ("Parent", "Mom", Field.InverseHandlingType.ManyToOne),
+        ("IEnumerable<Child>", "Kids", Field.InverseHandlingType.OneToMany),
+        ("IEnumerable<Parent>", "Parents", Field.InverseHandlingType.ManyToMany)
+    );
+  }
 
-    private string ExampleInput =>
-        @"
+  private string ExampleInput =>
+      @"
                 using ...
 
                 namespace ...

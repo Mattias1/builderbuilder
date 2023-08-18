@@ -3,22 +3,21 @@ using Xunit;
 
 namespace BuilderBuilder.Test.Parsers;
 
-public class ImmutableParserTest
-{
-    private Parser Parser => new ImmutableParser();
+public class ImmutableParserTest {
+  private Parser Parser => new ImmutableParser();
 
-    [Fact]
-    public void Parse_Example() {
-        var result = Parser.Parse(ExampleInput);
+  [Fact]
+  public void Parse_Example() {
+    var result = Parser.Parse(ExampleInput);
 
-        AssertHelper.AssertBuilderEntity(result, "ExampleStruct", false,
-            ("long?", "Id"),
-            ("My_class_123", "My_name_123"),
-            ("IReadOnlyList<Stuff>", "Stuffs"));
-    }
+    AssertHelper.AssertBuilderEntity(result, "ExampleStruct", false,
+        ("long?", "Id"),
+        ("My_class_123", "My_name_123"),
+        ("IReadOnlyList<Stuff>", "Stuffs"));
+  }
 
-    private string ExampleInput =>
-        @"
+  private string ExampleInput =>
+      @"
                 using ...
 
                 namespace ... {

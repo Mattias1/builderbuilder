@@ -3,22 +3,21 @@ using Xunit;
 
 namespace BuilderBuilder.Test.Parsers;
 
-public class PlainCsClassParserTest
-{
-    private Parser Parser => new PlainCsClassParser();
+public class PlainCsClassParserTest {
+  private Parser Parser => new PlainCsClassParser();
 
-    [Fact]
-    public void Parse_Example() {
-        var result = Parser.Parse(ExampleInput);
+  [Fact]
+  public void Parse_Example() {
+    var result = Parser.Parse(ExampleInput);
 
-        AssertHelper.AssertBuilderEntity(result, "ExampleEntity", false,
-            ("long?", "Id"),
-            ("My_class_123", "My_name_123"),
-            ("IEnumerable<Stuff>", "Stuffs"));
-    }
+    AssertHelper.AssertBuilderEntity(result, "ExampleEntity", false,
+        ("long?", "Id"),
+        ("My_class_123", "My_name_123"),
+        ("IEnumerable<Stuff>", "Stuffs"));
+  }
 
-    private string ExampleInput =>
-        @"
+  private string ExampleInput =>
+      @"
                 using ...
 
                 namespace ...
