@@ -4,7 +4,7 @@ using BuilderBuilder.Parsers;
 
 namespace BuilderBuilder;
 
-internal static class Frameworks {
+public static class Frameworks {
   private static Framework[]? _frameworks;
 
   public static Framework[] All => _frameworks ??= new Framework[] {
@@ -28,7 +28,7 @@ internal static class Frameworks {
   }
 }
 
-internal class Framework : IControlContentItem {
+public class Framework : IControlContentItem {
   public string Name { get; }
   public string Slug { get; }
 

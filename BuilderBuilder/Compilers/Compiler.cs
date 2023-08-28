@@ -3,17 +3,20 @@
 namespace BuilderBuilder.Compilers;
 
 public abstract class Compiler {
-  private static int TabSize => 4;
+  protected Settings Settings { get; private set; } = null!;
 
-  protected bool UseBrackets => true;
+  private bool UseSpaces => Settings.NrOfSpaces > 0;
+  private int TabSize => UseSpaces ? Settings.NrOfSpaces : 1;
+  private bool UseBrackets => true;
+  private bool UseEgyptianBrackets => Settings.EgyptianBracesIndentStyle;
 
   protected BuilderEntity BuilderEntity { get; private set; } = null!;
-
   protected StringBuilder StringBuilder { get; set; } = null!;
 
   private int _indent;
 
-  public string Compile(BuilderEntity entity) {
+  public string Compile(BuilderEntity entity, Settings settings) {
+    Settings = settings;
     BuilderEntity = entity;
     StringBuilder = new StringBuilder();
 
@@ -33,14 +36,26 @@ public abstract class Compiler {
   }
 
   protected void AddLine(string line) {
-    StringBuilder.Append(new string(' ', _indent * TabSize));
+    StringBuilder.Append(new string(UseSpaces ? ' ' : '\t', _indent * TabSize));
     StringBuilder.AppendLine(line);
   }
 
   protected void OpenBlock() {
     if (UseBrackets) {
-      AddLine("{");
+      if (UseEgyptianBrackets && StringBuilder[^1] == '\n') {
+        StringBuilder.Length--;
+        if (StringBuilder[^1] == '\r') {
+          StringBuilder.Length--;
+        }
+      }
+
+      if (UseEgyptianBrackets) {
+        StringBuilder.AppendLine(" {");
+      } else {
+        AddLine("{");
+      }
     }
+
     _indent++;
   }
 

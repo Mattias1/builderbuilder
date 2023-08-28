@@ -26,7 +26,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.4" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
-    <PackageReference Include="Mattias1.AvaloniaExtensions" Version="0.2.0" />
+    <PackageReference Include="Mattias1.AvaloniaExtensions" Version="1.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
 

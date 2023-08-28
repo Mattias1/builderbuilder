@@ -22,22 +22,24 @@ public class ImmutableParser : CsParser {
   }
 
   private void ParseName(string line) {
-    const string classOrStructPattern = @"^\s*(?:public\s+)?(?:readonly\s+)?(?:class|struct)\s+(\w+)";
-
-    if (MatchesPattern(line, classOrStructPattern)) {
-      _result.Name = GetPatternMatch(line, classOrStructPattern);
+    var name = ParseClassOrStructName(line);
+    if (name is not null) {
+      _result.Name = name;
     }
   }
 
   private void ParseConstructor(string[] lines, int i) {
     var constructorParameters = ParseConstructor(lines, i, _result.Name);
-    if (constructorParameters != null) {
+    if (constructorParameters is not null) {
       var parameters = constructorParameters.Split(',').Select(p => p.Trim()).ToArray();
       _parametersOfConstructors.Add(parameters);
     }
   }
 
   private IEnumerable<string> GetLastConstructorWithMostParameters() {
+    if (_parametersOfConstructors.Count == 0) {
+      throw new InvalidOperationException("No constructor found");
+    }
     var mostParameters = _parametersOfConstructors.Max(p => p.Length);
     return _parametersOfConstructors.Last(p => p.Length == mostParameters);
   }

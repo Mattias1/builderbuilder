@@ -26,8 +26,8 @@ public class VipCompiler : Compiler {
     AddLine("using ...");
     AddEmptyLine();
 
-    AddLine("namespace VipLive.WebApplication.VIPLive.Test. ...");
-    OpenBlock();
+    AddLine($"namespace {Settings.Namespace};");
+    AddEmptyLine();
 
     AddLine($"public class {EntityClass}TestHelper");
     OpenBlock();
@@ -99,7 +99,5 @@ public class VipCompiler : Compiler {
     });
   }
 
-  private void CloseClasses() {
-    CloseBlocks(3);
-  }
+  private void CloseClasses() => CloseBlocks(2);
 }

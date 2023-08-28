@@ -1,92 +1,71 @@
 BuilderBuilder
 ===============
-NOTE - THIS README IS OUT OF DATE - TODO
-
-A little tool to generate code for my unit-test builders.
-It's not perfect as you have to fix the usings and namespaces and such yourselves, but it should save quite some typing.
+A little tool to generate code for my unit test builders.
+It's not perfect as you have to fix the usings and such yourselves, but it should save quite some
+typing.
+The reason I use a copy/paste app, instead of something like an IDE plugin or a source generator is
+that this way it's IDE independent and the resulting builder is easy to modify.
 
 
 Prerequisite
 -------------
-It expects the `AbstractBuilder` and `AbstractEntityBuilder` base classes and an `IdGenerator` to exist in your project.
-You can copy the ones in this repo if you want.
+For the NHibernate builders it expects the `AbstractBuilder` and `AbstractEntityBuilder` base classes
+and an `IdGenerator` to exist in your project. You can copy the examples from this repo if you want.
 
 
 Example
 --------
 This tool will take an entity, for example:
 ``` csharp
-using ...
+using ...;
 
-namespace ...
-{
-    [Class]
-    public class ExampleEntity
-    {
-        [Id]
-        public virtual long? Id { get; set; }
+namespace SomeApplication.Entities;
 
-        [Property]
-        public virtual string Name { get; set; }
+public sealed class User : AggregateRoot<User, UserId> {
+    public override UserId Id { get; }
+    public List<Stuff>? Things { get; }
 
-        [ManyToMany]
-        public virtual IEnumerable<Stuff> Stuffs { get; set; }
-
-        public virtual int IgnoreMe()
-        {
-            return 42;
-        }
+    public User(UserId id, List<Stuff>? things) {
+        Id = id;
+        Things = things;
     }
+
+    public bool SomeMethod() => true;
 }
 ```
 
 And turn it into a builder:
 ``` csharp
-using ...
+using ...;
 
-namespace VipLive.WebApplication.VIPLive.Test. ...
-{
-    public class ExampleEntityTestHelper
-    {
-        public static ExampleEntityBuilder Builder()
-        {
-            return new ExampleEntityBuilder();
+namespace SomeApplication.Test.TestHelpers;
+
+public class UserTestHelper {
+    public static UserBuilder Builder() {
+        return new UserBuilder();
+    }
+
+
+    public class UserBuilder {
+        private UserId? _id;
+        private List<Stuff>? _things;
+
+        public UserBuilder WithId(UserId id) {
+            _id = id;
+            return this;
         }
 
+        public UserBuilder WithThings(List<Stuff>? things) {
+            _things = things;
+            return this;
+        }
 
-        public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
-        {
-            public ExampleEntityBuilder() : base() { }
-
-            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
-
-            public ExampleEntityBuilder WithId(long? id)
-            {
-                Item.Id = id;
-                return this;
+        public User Build() {
+            if (_id is null) {
+                throw new InvalidOperationException("Id is not nullable");
             }
 
-            public ExampleEntityBuilder WithName(string name)
-            {
-                Item.Name = name;
-                return this;
-            }
-
-            public ExampleEntityBuilder WithStuffs(IEnumerable<Stuff> stuffs)
-            {
-                Item.Stuffs = stuffs;
-                stuffs.ExampleEntitys.Add(Item);
-                return this;
-            }
-
-            public override ExampleEntity AutoBuild()
-            {
-                if (Item.Id is null)
-                {
-                    WithId(IdGenerator.Next());
-                }
-                return Build();
-            }
+            return new User(_id, _things);
         }
     }
 }
@@ -96,3 +75,8 @@ namespace VipLive.WebApplication.VIPLive.Test. ...
 Setup development environment
 ------------------------------
 Install the dotnet 7 SDK and run with `dotnet run --project BuilderBuilder`.
+
+
+Build a release
+----------------
+To build a release, run `./build-release.sh`.

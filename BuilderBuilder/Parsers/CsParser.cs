@@ -27,6 +27,15 @@ public abstract class CsParser : Parser {
     return false;
   }
 
+  protected string? ParseClassOrStructName(string line) {
+    const string classOrStructPattern = @"^\s*(?:public\s+)?(?:sealed\s+)?(?:readonly\s+)?(?:class|struct)\s+(\w+)";
+
+    if (MatchesPattern(line, classOrStructPattern)) {
+      return GetPatternMatch(line, classOrStructPattern);
+    }
+    return null;
+  }
+
   protected (string type, string name)? ParsePublicField(string line) {
     return ParsePublicField(line, false);
   }

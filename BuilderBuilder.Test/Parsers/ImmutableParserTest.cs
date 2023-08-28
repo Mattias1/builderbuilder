@@ -21,7 +21,7 @@ public class ImmutableParserTest {
                 using ...
 
                 namespace ... {
-                    public readonly struct ExampleStruct {
+                    public sealed readonly struct ExampleStruct {
                         public readonly long? Id;
                         public My_class_123 My_name_123 { get; }
                         public IReadOnlyList<Stuff> Stuffs { get; }

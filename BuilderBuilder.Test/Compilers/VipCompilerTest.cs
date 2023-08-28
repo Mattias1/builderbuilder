@@ -20,80 +20,79 @@ public class VipCompilerTest {
         }
     };
 
-    var result = _compiler.Compile(input);
+    var result = _compiler.Compile(input, new Settings() { Namespace = "Example.Test" });
 
     AssertHelper.AssertMultilineStringEq(PersistExampleOutput, result);
   }
 
   private const string PersistExampleOutput = @"                using ...
 
-                namespace VipLive.WebApplication.VIPLive.Test. ...
+                namespace Example.Test;
+
+                public class ExampleEntityTestHelper
                 {
-                    public class ExampleEntityTestHelper
+                    public static ExampleEntityBuilder Builder()
                     {
-                        public static ExampleEntityBuilder Builder()
+                        return new ExampleEntityBuilder();
+                    }
+
+
+                    public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
+                    {
+                        public ExampleEntityBuilder() : base() { }
+
+                        public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
+
+                        public ExampleEntityBuilder WithId(long? id)
                         {
-                            return new ExampleEntityBuilder();
+                            Item.Id = id;
+                            return this;
                         }
 
-
-                        public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
+                        public ExampleEntityBuilder WithName(string name)
                         {
-                            public ExampleEntityBuilder() : base() { }
+                            Item.Name = name;
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
+                        public ExampleEntityBuilder WithTwin(Brother twin)
+                        {
+                            Item.Twin = twin;
+                            twin.ExampleEntity = Item;
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder WithId(long? id)
+                        public ExampleEntityBuilder WithMom(Parent mom)
+                        {
+                            Item.Mom = mom;
+                            mom.ExampleEntitys.Add(Item);
+                            return this;
+                        }
+
+                        public ExampleEntityBuilder WithKids(List<Child> kids)
+                        {
+                            Item.Kids = kids;
+                            foreach (var obj in kids)
                             {
-                                Item.Id = id;
-                                return this;
+                                obj.ExampleEntity = Item;
                             }
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder WithName(string name)
-                            {
-                                Item.Name = name;
-                                return this;
-                            }
+                        public ExampleEntityBuilder WithParents(List<Parent> parents)
+                        {
+                            Item.Parents = parents;
+                            parents.ExampleEntitys.Add(Item);
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder WithTwin(Brother twin)
+                        public override ExampleEntity AutoBuild()
+                        {
+                            if (Item.Id is null)
                             {
-                                Item.Twin = twin;
-                                twin.ExampleEntity = Item;
-                                return this;
+                                WithId(IdGenerator.Next());
                             }
-
-                            public ExampleEntityBuilder WithMom(Parent mom)
-                            {
-                                Item.Mom = mom;
-                                mom.ExampleEntitys.Add(Item);
-                                return this;
-                            }
-
-                            public ExampleEntityBuilder WithKids(List<Child> kids)
-                            {
-                                Item.Kids = kids;
-                                foreach (var obj in kids)
-                                {
-                                    obj.ExampleEntity = Item;
-                                }
-                                return this;
-                            }
-
-                            public ExampleEntityBuilder WithParents(List<Parent> parents)
-                            {
-                                Item.Parents = parents;
-                                parents.ExampleEntitys.Add(Item);
-                                return this;
-                            }
-
-                            public override ExampleEntity AutoBuild()
-                            {
-                                if (Item.Id is null)
-                                {
-                                    WithId(IdGenerator.Next());
-                                }
-                                return Build();
-                            }
+                            return Build();
                         }
                     }
                 }
@@ -112,58 +111,57 @@ public class VipCompilerTest {
         }
     };
 
-    var result = _compiler.Compile(input);
+    var result = _compiler.Compile(input, new Settings() { Namespace = "Example.Test" });
 
     AssertHelper.AssertMultilineStringEq(NonPersistExampleOutput, result);
   }
 
   private const string NonPersistExampleOutput = @"                using ...
 
-                namespace VipLive.WebApplication.VIPLive.Test. ...
+                namespace Example.Test;
+
+                public class ExampleEntityTestHelper
                 {
-                    public class ExampleEntityTestHelper
+                    public static ExampleEntityBuilder Builder()
                     {
-                        public static ExampleEntityBuilder Builder()
+                        return new ExampleEntityBuilder();
+                    }
+
+
+                    public class ExampleEntityBuilder : AbstractBuilder<ExampleEntity>
+                    {
+                        public ExampleEntityBuilder() : base() { }
+
+                        public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
+
+                        public ExampleEntityBuilder WithName(string name)
                         {
-                            return new ExampleEntityBuilder();
+                            Item.Name = name;
+                            return this;
                         }
 
-
-                        public class ExampleEntityBuilder : AbstractBuilder<ExampleEntity>
+                        public ExampleEntityBuilder WithTwin(Brother twin)
                         {
-                            public ExampleEntityBuilder() : base() { }
+                            Item.Twin = twin;
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
+                        public ExampleEntityBuilder WithMom(Parent mom)
+                        {
+                            Item.Mom = mom;
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder WithName(string name)
-                            {
-                                Item.Name = name;
-                                return this;
-                            }
+                        public ExampleEntityBuilder WithKids(List<Child> kids)
+                        {
+                            Item.Kids = kids;
+                            return this;
+                        }
 
-                            public ExampleEntityBuilder WithTwin(Brother twin)
-                            {
-                                Item.Twin = twin;
-                                return this;
-                            }
-
-                            public ExampleEntityBuilder WithMom(Parent mom)
-                            {
-                                Item.Mom = mom;
-                                return this;
-                            }
-
-                            public ExampleEntityBuilder WithKids(List<Child> kids)
-                            {
-                                Item.Kids = kids;
-                                return this;
-                            }
-
-                            public ExampleEntityBuilder WithParents(List<Parent> parents)
-                            {
-                                Item.Parents = parents;
-                                return this;
-                            }
+                        public ExampleEntityBuilder WithParents(List<Parent> parents)
+                        {
+                            Item.Parents = parents;
+                            return this;
                         }
                     }
                 }

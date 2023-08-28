@@ -29,8 +29,8 @@ public class ImmutableCompiler : Compiler {
     AddLine("using ...");
     AddEmptyLine();
 
-    AddLine("namespace ...");
-    OpenBlock();
+    AddLine($"namespace {Settings.Namespace};");
+    AddEmptyLine();
 
     AddLine($"public class {EntityClass}TestHelper");
     OpenBlock();
@@ -94,5 +94,5 @@ public class ImmutableCompiler : Compiler {
     });
   }
 
-  private void CloseClasses() => CloseBlocks(3);
+  private void CloseClasses() => CloseBlocks(2);
 }

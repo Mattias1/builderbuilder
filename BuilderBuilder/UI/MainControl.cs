@@ -14,14 +14,14 @@ internal class MainControl : CanvasComponentBase {
   private ExtendedComboBox<Framework> _cbFramework = null!;
 
   protected override void InitializeControls() {
+    var btnSettings = AddButton("Settings", _ => SwitchToComponent<SettingsControl>()).TopLeftInPanel();
     _cbFramework = AddComboBox(Frameworks.All, OnFrameworkChange).TopRightInPanel();
 
-    _tbInput = AddMultilineTextBox().OnTextChanged(OnInputChange).XLeftInPanel().YBelow(_cbFramework)
+    _tbInput = AddMultilineTextBox().OnTextChanged(OnInputChange).XLeftInPanel().YBelow(btnSettings)
         .StretchDownInPanel().StretchFractionRightInPanel(1, 2);
     _tbOutput = AddMultilineTextBox().RightOf(_tbInput).StretchDownInPanel().StretchRightInPanel();
-    AddLabel("Input:", _tbInput).Above(_tbInput);
+    AddLabel("Input:", _tbInput).XRightOf(btnSettings).YAbove(_tbInput);
     AddLabel("Output:", _tbOutput).Above(_tbOutput);
-    _tbInput.Focus();
   }
 
   protected override void OnLoaded(RoutedEventArgs e) {
@@ -42,11 +42,16 @@ internal class MainControl : CanvasComponentBase {
   }
 
   private void OnInputChange(RoutedEventArgs e) {
-    _tbOutput.Text = BuildBuilder(_tbInput.Text ?? "", Settings.SelectedFramework);
+    _tbOutput.Text = BuildBuilder(_tbInput.Text ?? "", Settings);
   }
 
-  private static string BuildBuilder(string input, Framework framework) {
-    var entity = framework.Parser.Parse(input);
-    return framework.Compiler.Compile(entity);
+  private static string BuildBuilder(string input, Settings settings) {
+    try {
+      var framework = settings.SelectedFramework;
+      var entity = framework.Parser.Parse(input);
+      return framework.Compiler.Compile(entity, settings);
+    } catch (Exception e) {
+      return $"Cannot parse.\nError: {e.Message}.";
+    }
   }
 }

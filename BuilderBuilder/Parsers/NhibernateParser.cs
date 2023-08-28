@@ -17,7 +17,7 @@ public class NhibernateParser : CsParser {
   }
 
   private void ParseName(string[] lines, int i, string line) {
-    const string classPattern = @"^\s*public\s+class\s+(\w+)";
+    const string classPattern = @"^\s*public\s+(?:sealed\s+)?class\s+(\w+)";
 
     if (MatchesPattern(line, classPattern) && LineHasAttribute(lines, i, "Class")) {
       _result.Name = GetPatternMatch(line, classPattern);
@@ -26,7 +26,7 @@ public class NhibernateParser : CsParser {
 
   private void ParseField(string[] lines, int i, string line) {
     var field = ParsePublicVirtualField(line);
-    if (field == null || !LineHasParsableAttribute(lines, i)) {
+    if (field is null || !LineHasParsableAttribute(lines, i)) {
       return;
     }
 

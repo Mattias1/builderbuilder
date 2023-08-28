@@ -15,16 +15,15 @@ public class PlainCsClassParser : CsParser {
   }
 
   private void ParseName(string line) {
-    const string classPattern = @"^\s*(?:public\s+)?class\s+(\w+)";
-
-    if (MatchesPattern(line, classPattern)) {
-      _result.Name = GetPatternMatch(line, classPattern);
+    var name = ParseClassOrStructName(line);
+    if (name is not null) {
+      _result.Name = name;
     }
   }
 
   private void ParseField(string line) {
     var field = ParsePublicField(line);
-    if (field != null) {
+    if (field is not null) {
       _result.Fields.Add(new Field(field.Value.type, field.Value.name));
     }
   }
