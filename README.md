@@ -74,7 +74,7 @@ public class UserTestHelper {
 
 Setup development environment
 ------------------------------
-Install the dotnet 7 SDK and run with `dotnet run --project BuilderBuilder`.
+Install the dotnet 8 SDK and run with `dotnet run --project BuilderBuilder`.
 
 
 Build a release
