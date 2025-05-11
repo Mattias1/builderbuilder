@@ -8,8 +8,8 @@ public static class Frameworks {
   private static Framework[]? _frameworks;
 
   public static Framework[] All => _frameworks ??= [
-      new("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler()),
-      new("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler()),
+      new("C# NHibernate", "CsNhibernate", new NhibernateParser(), new MutableCompiler()),
+      new("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new MutableCompiler()),
       new("C# immutable", "Immutable", new ImmutableParser(), new ImmutableCompiler())
   ];
 

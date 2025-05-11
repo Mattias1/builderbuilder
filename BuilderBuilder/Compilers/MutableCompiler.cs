@@ -1,6 +1,6 @@
 ﻿namespace BuilderBuilder.Compilers;
 
-public class VipCompiler : Compiler {
+public class MutableCompiler : Compiler {
   private string EntityClass => BuilderEntity.Name;
   private string BuilderClass => EntityClass + "Builder";
 

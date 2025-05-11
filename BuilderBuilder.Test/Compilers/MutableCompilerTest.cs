@@ -3,8 +3,8 @@ using Xunit;
 
 namespace BuilderBuilder.Test.Compilers;
 
-public class VipCompilerTest {
-  private readonly VipCompiler _compiler = new();
+public class MutableCompilerTest {
+  private readonly MutableCompiler _compiler = new();
 
   [Fact]
   public void Compile_PersistExample() {
