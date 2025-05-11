@@ -30,6 +30,11 @@ internal class MainControl : CanvasComponentBase {
     _tbInput.Focus();
   }
 
+  protected override void OnSwitchingToComponent() {
+    _tbInput.Focus();
+    OnInputChange(null);
+  }
+
   protected override void OnGotFocus(GotFocusEventArgs e) {
     base.OnGotFocus(e);
     _tbInput.Focus();
@@ -41,7 +46,7 @@ internal class MainControl : CanvasComponentBase {
     OnInputChange(e);
   }
 
-  private void OnInputChange(RoutedEventArgs e) {
+  private void OnInputChange(RoutedEventArgs? e) {
     _tbOutput.Text = BuildBuilder(_tbInput.Text ?? "", Settings);
   }
 
