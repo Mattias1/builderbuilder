@@ -36,7 +36,6 @@ public class MutableCompilerTest {
                         return new ExampleEntityBuilder();
                     }
 
-
                     public class ExampleEntityBuilder : AbstractEntityBuilder<ExampleEntity>
                     {
                         public ExampleEntityBuilder() : base() { }

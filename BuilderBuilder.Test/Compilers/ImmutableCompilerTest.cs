@@ -38,7 +38,6 @@ public class ImmutableCompilerTest {
           return new ExampleEntityBuilder();
         }
 
-
         public class ExampleEntityBuilder {
           private long? _id;
           private string? _name;

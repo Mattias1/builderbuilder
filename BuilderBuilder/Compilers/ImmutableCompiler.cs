@@ -51,7 +51,7 @@ public class ImmutableCompiler : Compiler {
   }
 
   private void OpenBuilderClass() {
-    AddEmptyLines(2);
+    AddEmptyLine();
 
     AddLine($"public class {BuilderClass}");
     OpenBlock();

@@ -48,7 +48,7 @@ public class MutableCompiler : Compiler {
   }
 
   private void OpenBuilderClass() {
-    AddEmptyLines(2);
+    AddEmptyLine();
 
     AddLine(BuilderEntity.Persistable
         ? $"public class {BuilderClass} : AbstractEntityBuilder<{EntityClass}>"
