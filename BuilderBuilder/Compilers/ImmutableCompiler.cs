@@ -17,10 +17,12 @@ public class ImmutableCompiler : Compiler {
     }
 
     foreach (var field in BuilderEntity.Fields) {
-      AddFieldSetter(field);
+      AddFieldSetters(field);
     }
 
     AddBuildMethod();
+
+    AddWithOutMethod();
 
     CloseClasses();
   }
@@ -64,13 +66,15 @@ public class ImmutableCompiler : Compiler {
     AddLine($"private {type} {name};");
   }
 
-  private void AddFieldSetter(Field field) {
+  private void AddFieldSetters(Field field) {
     var type = field.Type;
     var publicPropertyName = field.Name;
     var localVarName = LocalVar(field.Name);
     var privatePropertyName = PrivateVar(field.Name);
 
     AddEmptyLine();
+    AddLine($"public {BuilderClass} With{publicPropertyName}({type} {localVarName}, out {type} outVar)"
+        + $" => WithOut(With{publicPropertyName}, {localVarName}, out outVar);");
 
     AddLine($"public {BuilderClass} With{publicPropertyName}({type} {localVarName})");
     WithBlock(() => {
@@ -98,6 +102,16 @@ public class ImmutableCompiler : Compiler {
       AddEmptyLine();
 
       AddLine($"return new {EntityClass}({parameters});");
+    });
+  }
+
+  private void AddWithOutMethod() {
+    AddEmptyLine();
+
+    AddLine($"private {BuilderClass} WithOut<T>(Func<T, {BuilderClass}> buildFunc, T inVar, out T outVar)");
+    WithBlock(() => {
+      AddLine("outVar = inVar;");
+      AddLine("return buildFunc(inVar);");
     });
   }
 

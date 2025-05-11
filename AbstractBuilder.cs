@@ -14,6 +14,12 @@
         protected AbstractBuilder(T item) => Item = item;
 
         public virtual T Build() => Item;
+
+        private TBuilder WithOut<TVar, TBuilder>(Func<TVar, TBuilder> buildFunc, TVar inVar, out TVar outVar)
+        {
+            outVar = inVar;
+            return buildFunc(inVar);
+        }
     }
 
     public interface IAbstractEntityBuilder<out T> : IAbstractBuilder<T>

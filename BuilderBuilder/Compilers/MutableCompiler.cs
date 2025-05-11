@@ -71,6 +71,9 @@ public class MutableCompiler : Compiler {
 
     AddEmptyLine();
 
+    AddLine($"public {BuilderClass} With{name}({type} {localVarName}, out {type} outVar)"
+        + $" => WithOut(With{name}, {localVarName}, out outVar);");
+
     AddLine($"public {BuilderClass} With{name}({type} {localVarName})");
     WithBlock(() => {
       AddLine($"{item}.{name} = {localVarName};");

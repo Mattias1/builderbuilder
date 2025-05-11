@@ -42,18 +42,21 @@ public class MutableCompilerTest {
 
                         public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
 
+                        public ExampleEntityBuilder WithId(long? id, out long? outVar) => WithOut(WithId, id, out outVar);
                         public ExampleEntityBuilder WithId(long? id)
                         {
                             Item.Id = id;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithName(string name, out string outVar) => WithOut(WithName, name, out outVar);
                         public ExampleEntityBuilder WithName(string name)
                         {
                             Item.Name = name;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithTwin(Brother twin, out Brother outVar) => WithOut(WithTwin, twin, out outVar);
                         public ExampleEntityBuilder WithTwin(Brother twin)
                         {
                             Item.Twin = twin;
@@ -61,6 +64,7 @@ public class MutableCompilerTest {
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithMom(Parent mom, out Parent outVar) => WithOut(WithMom, mom, out outVar);
                         public ExampleEntityBuilder WithMom(Parent mom)
                         {
                             Item.Mom = mom;
@@ -68,6 +72,7 @@ public class MutableCompilerTest {
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithKids(List<Child> kids, out List<Child> outVar) => WithOut(WithKids, kids, out outVar);
                         public ExampleEntityBuilder WithKids(List<Child> kids)
                         {
                             Item.Kids = kids;
@@ -78,6 +83,7 @@ public class MutableCompilerTest {
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithParents(List<Parent> parents, out List<Parent> outVar) => WithOut(WithParents, parents, out outVar);
                         public ExampleEntityBuilder WithParents(List<Parent> parents)
                         {
                             Item.Parents = parents;
@@ -133,30 +139,35 @@ public class MutableCompilerTest {
 
                         public ExampleEntityBuilder(ExampleEntity exampleEntity) : base(exampleEntity) { }
 
+                        public ExampleEntityBuilder WithName(string name, out string outVar) => WithOut(WithName, name, out outVar);
                         public ExampleEntityBuilder WithName(string name)
                         {
                             Item.Name = name;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithTwin(Brother twin, out Brother outVar) => WithOut(WithTwin, twin, out outVar);
                         public ExampleEntityBuilder WithTwin(Brother twin)
                         {
                             Item.Twin = twin;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithMom(Parent mom, out Parent outVar) => WithOut(WithMom, mom, out outVar);
                         public ExampleEntityBuilder WithMom(Parent mom)
                         {
                             Item.Mom = mom;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithKids(List<Child> kids, out List<Child> outVar) => WithOut(WithKids, kids, out outVar);
                         public ExampleEntityBuilder WithKids(List<Child> kids)
                         {
                             Item.Kids = kids;
                             return this;
                         }
 
+                        public ExampleEntityBuilder WithParents(List<Parent> parents, out List<Parent> outVar) => WithOut(WithParents, parents, out outVar);
                         public ExampleEntityBuilder WithParents(List<Parent> parents)
                         {
                             Item.Parents = parents;

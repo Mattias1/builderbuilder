@@ -46,31 +46,37 @@ public class ImmutableCompilerTest {
           private List<Child>? _kids;
           private List<Parent>? _parents;
 
+          public ExampleEntityBuilder WithId(long? id, out long? outVar) => WithOut(WithId, id, out outVar);
           public ExampleEntityBuilder WithId(long? id) {
             _id = id;
             return this;
           }
 
+          public ExampleEntityBuilder WithName(string name, out string outVar) => WithOut(WithName, name, out outVar);
           public ExampleEntityBuilder WithName(string name) {
             _name = name;
             return this;
           }
 
+          public ExampleEntityBuilder WithTwin(Brother twin, out Brother outVar) => WithOut(WithTwin, twin, out outVar);
           public ExampleEntityBuilder WithTwin(Brother twin) {
             _twin = twin;
             return this;
           }
 
+          public ExampleEntityBuilder WithMom(Parent mom, out Parent outVar) => WithOut(WithMom, mom, out outVar);
           public ExampleEntityBuilder WithMom(Parent mom) {
             _mom = mom;
             return this;
           }
 
+          public ExampleEntityBuilder WithKids(List<Child> kids, out List<Child> outVar) => WithOut(WithKids, kids, out outVar);
           public ExampleEntityBuilder WithKids(List<Child> kids) {
             _kids = kids;
             return this;
           }
 
+          public ExampleEntityBuilder WithParents(List<Parent> parents, out List<Parent> outVar) => WithOut(WithParents, parents, out outVar);
           public ExampleEntityBuilder WithParents(List<Parent> parents) {
             _parents = parents;
             return this;
@@ -94,6 +100,11 @@ public class ImmutableCompilerTest {
             }
 
             return new ExampleEntity(_id, _name, _twin, _mom, _kids, _parents);
+          }
+
+          private ExampleEntityBuilder WithOut<T>(Func<T, ExampleEntityBuilder> buildFunc, T inVar, out T outVar) {
+            outVar = inVar;
+            return buildFunc(inVar);
           }
         }
       }
