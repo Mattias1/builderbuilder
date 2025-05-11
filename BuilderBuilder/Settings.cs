@@ -5,6 +5,7 @@ namespace BuilderBuilder;
 public class Settings {
   public const int DEFAULT_NR_OF_SPACES = 4;
   public const string DEFAULT_NAMESPACE = "<insert namespace>";
+  public const bool DEFAULT_FILE_SCOPED_NAMESPACE = true;
   public const bool DEFAULT_USE_EGYPTIAN_BRACES = false;
   public const bool DEFAULT_UNDERSCORE_ABSTRACT = false;
   public const bool DEFAULT_INCLUDE_USING_DOTS = true;
@@ -21,11 +22,13 @@ public class Settings {
   /// </summary>
   public int NrOfSpaces { get; set; } = DEFAULT_NR_OF_SPACES;
 
+  public bool IncludeUsingDots { get; set; } = DEFAULT_INCLUDE_USING_DOTS;
+
   public string Namespace { get; set; } = DEFAULT_NAMESPACE;
+
+  public bool FileScopedNamespace { get; set; } = DEFAULT_FILE_SCOPED_NAMESPACE;
 
   public bool EgyptianBracesIndentStyle { get; set; } = DEFAULT_USE_EGYPTIAN_BRACES;
 
   public bool UnderscoreAbstract { get; set; } = DEFAULT_UNDERSCORE_ABSTRACT;
-
-  public bool IncludeUsingDots { get; set; } = DEFAULT_INCLUDE_USING_DOTS;
 }

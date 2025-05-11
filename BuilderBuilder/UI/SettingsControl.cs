@@ -12,6 +12,7 @@ internal class SettingsControl : CanvasComponentBase {
 
   private CheckBox _cbIncludeUsingDots = null!;
   private TextBox _tbNamespace = null!;
+  private CheckBox _cbFileScopedNamespace = null!;
   private RadioButton _rbSpaces = null!, _rbTabs = null!;
   private TextBox _tbNumberOfSpaces = null!;
   private RadioButton _rbEgyptianBraces = null!, _rbNormalBraces = null!;
@@ -20,6 +21,7 @@ internal class SettingsControl : CanvasComponentBase {
   protected override void InitializeControls() {
     _cbIncludeUsingDots = AddCheckBox("Include using with dots").TopLeftInPanel();
     _tbNamespace = AddTextBox().Below();
+    _cbFileScopedNamespace = AddCheckBox("File scoped namespace").Below();
     _rbSpaces = AddRadio("indent", "Spaces").Below();
     _rbTabs = AddRadio("indent", "Tabs").Below();
     _rbNormalBraces = AddRadio("braces", "Normal (Allman)").Below();
@@ -31,6 +33,7 @@ internal class SettingsControl : CanvasComponentBase {
     InsertLabelLeftOf("Indent size:", _rbSpaces, LABEL_WIDTH);
     InsertLabelLeftOf("Brace style:", _rbNormalBraces, LABEL_WIDTH);
     InsertLabelLeftOf("Naming:", _cbUnderscoreAbstract, LABEL_WIDTH);
+    _cbFileScopedNamespace.XAlignLeft(_tbNamespace);
     _rbTabs.XAlignLeft(_rbSpaces);
     _rbEgyptianBraces.XAlignLeft(_rbNormalBraces);
 
@@ -65,6 +68,7 @@ internal class SettingsControl : CanvasComponentBase {
   private void LoadSettings() {
     _cbIncludeUsingDots.IsChecked = Settings.IncludeUsingDots;
     _tbNamespace.Text = Settings.Namespace;
+    _cbFileScopedNamespace.IsChecked = Settings.FileScopedNamespace;
     _rbSpaces.IsChecked = Settings.NrOfSpaces > 0;
     _rbTabs.IsChecked = Settings.NrOfSpaces == 0;
     _tbNumberOfSpaces.Text = Settings.NrOfSpaces > 0 ? Settings.NrOfSpaces.ToString() : "";
@@ -76,6 +80,7 @@ internal class SettingsControl : CanvasComponentBase {
   private void SaveSettings() {
     Settings.IncludeUsingDots = _cbIncludeUsingDots.IsChecked == true;
     Settings.Namespace = _tbNamespace.Text ?? Settings.DEFAULT_NAMESPACE;
+    Settings.FileScopedNamespace = _cbFileScopedNamespace.IsChecked == true;
     if (!int.TryParse(_tbNumberOfSpaces.Text, out int nrOfSpaces)) {
       nrOfSpaces = Settings.DEFAULT_NR_OF_SPACES;
     }

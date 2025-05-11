@@ -28,8 +28,13 @@ public class MutableCompiler : Compiler {
       AddEmptyLine();
     }
 
-    AddLine($"namespace {Settings.Namespace};");
-    AddEmptyLine();
+    if (Settings.FileScopedNamespace) {
+      AddLine($"namespace {Settings.Namespace};");
+      AddEmptyLine();
+    } else {
+      AddLine($"namespace {Settings.Namespace}");
+      OpenBlock();
+    }
 
     AddLine($"public class {EntityClass}TestHelper");
     OpenBlock();
@@ -104,5 +109,5 @@ public class MutableCompiler : Compiler {
     });
   }
 
-  private void CloseClasses() => CloseBlocks(2);
+  private void CloseClasses() => CloseBlocks(Settings.FileScopedNamespace ? 2 : 3);
 }
