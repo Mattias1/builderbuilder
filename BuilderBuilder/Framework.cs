@@ -7,11 +7,11 @@ namespace BuilderBuilder;
 public static class Frameworks {
   private static Framework[]? _frameworks;
 
-  public static Framework[] All => _frameworks ??= new Framework[] {
+  public static Framework[] All => _frameworks ??= [
       new("C# NHibernate", "CsNhibernate", new NhibernateParser(), new VipCompiler()),
       new("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new VipCompiler()),
       new("C# immutable", "Immutable", new ImmutableParser(), new ImmutableCompiler())
-  };
+  ];
 
   public static Framework FromSlug(string slug) {
     return All.FirstOrDefault(f => f.Slug == slug) ?? All.First();

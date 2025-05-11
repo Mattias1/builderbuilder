@@ -2,11 +2,11 @@
 
 public class ImmutableParser : CsParser {
   private BuilderEntity _result = null!;
-  private List<string[]> _parametersOfConstructors = new();
+  private List<string[]> _parametersOfConstructors = [];
 
   public override BuilderEntity Parse(string[] lines) {
     _result = new BuilderEntity(persistable: false);
-    _parametersOfConstructors = new List<string[]>();
+    _parametersOfConstructors = [];
 
     for (var i = 0; i < lines.Length; i++) {
       var line = lines[i];

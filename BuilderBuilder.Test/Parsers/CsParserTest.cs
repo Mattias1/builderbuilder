@@ -147,21 +147,21 @@ public class CsParserTest : CsParser {
   [Fact]
   public void ParseConstructor_IfParameterlessConstructor_ThenEmptyString() {
     var line = "public MyClass()";
-    var result = ParseConstructor(new[] { line }, 0, "MyClass");
+    var result = ParseConstructor([line], 0, "MyClass");
     Assert.Equal("", result);
   }
 
   [Fact]
   public void ParseConstructor_IfConstructor_ThenParameters() {
     var line = "public MyClass(long? id, IEnumerable<Stuff> stuffs) {";
-    var result = ParseConstructor(new[] { line }, 0, "MyClass");
+    var result = ParseConstructor([line], 0, "MyClass");
     Assert.Equal("long? id, IEnumerable<Stuff> stuffs", result);
   }
 
   [Fact]
   public void ParseConstructor_IfConstructorWithBase_ThenParameters() {
     var line = "public MyClass(int one, int two) : base(one, two, 3) {";
-    var result = ParseConstructor(new[] { line }, 0, "MyClass");
+    var result = ParseConstructor([line], 0, "MyClass");
     Assert.Equal("int one, int two", result);
   }
 
@@ -175,7 +175,7 @@ public class CsParserTest : CsParser {
   [Fact]
   public void ParseConstructor_IfFunction_ThenNull() {
     var line = "public int MyFunction()";
-    var result = ParseConstructor(new[] { line }, 0, "MyFunction");
+    var result = ParseConstructor([line], 0, "MyFunction");
     Assert.Null(result);
   }
 }

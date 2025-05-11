@@ -33,7 +33,7 @@ public abstract class Parser {
   protected static string[] GetPatternMatches(string line, string pattern, params int[] groupNrs) {
     var matches = new Regex(pattern).Matches(line, 0);
     if (matches.Count == 0) {
-      return Array.Empty<string>();
+      return [];
     }
     var groups = matches[0].Groups;
 
@@ -51,5 +51,5 @@ public abstract class Parser {
   private static string[] SplitLines(string input) =>
       input
           .Replace("\r\n", "\n")
-          .Split(new[] { '\n' });
+          .Split(['\n']);
 }

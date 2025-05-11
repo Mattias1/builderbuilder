@@ -10,10 +10,10 @@ internal static class Program {
   private static readonly Size DEFAULT_SIZE = new(700, 450);
 
   private static void Main(string[] args) {
-    AppBuilderExtensions.Init().StartDesktopApp(() => ExtendedWindow.Init<MainControl>("BuilderBuilder")
-        .AddLazyComponent<SettingsControl>()
-        .WithSettingsFile<Settings>("./builderbuilder.json")
-        .WithSize(DEFAULT_SIZE, MIN_SIZE)
-        .Icon(AssetExtensions.LoadWindowIcon("Resources/EyesHybrid.ico")));
+    AvaloniaExtensionsApp.Init().StartDesktopApp(() => ExtendedWindow.Init<MainControl>("BuilderBuilder")
+      .AddLazyComponent<SettingsControl>()
+      .WithSettingsFile<Settings>("./builderbuilder.json")
+      .WithSize(DEFAULT_SIZE, MIN_SIZE)
+      .Icon(AssetExtensions.LoadWindowIcon("Resources/EyesHybrid.ico")));
   }
 }

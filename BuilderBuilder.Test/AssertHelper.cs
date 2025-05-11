@@ -59,11 +59,11 @@ internal static class AssertHelper {
     ListEq(al, el);
   }
 
-  public static void AreEqualModuloWhitespace(string expected, string actual) {
+  public static void AreEqualModuloWhitespace(string? expected, string? actual) {
     Assert.Equal(TrimWhitespace(expected), TrimWhitespace(actual));
   }
 
-  private static string TrimWhitespace(string s) {
-    return s.Replace(" ", "").Replace("\n", "").Replace("\r", "").Replace("\t", "");
+  private static string? TrimWhitespace(string? s) {
+    return s?.Replace(" ", "").Replace("\n", "").Replace("\r", "").Replace("\t", "");
   }
 }

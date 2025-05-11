@@ -10,7 +10,7 @@ public class BuilderEntity {
   public BuilderEntity(bool persistable) {
     Persistable = persistable;
     Name = "";
-    Fields = new List<Field>();
+    Fields = [];
   }
 }
 
