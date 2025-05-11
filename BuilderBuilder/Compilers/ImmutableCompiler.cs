@@ -26,8 +26,10 @@ public class ImmutableCompiler : Compiler {
   }
 
   private void OpenTestHelperClass() {
-    AddLine("using ...");
-    AddEmptyLine();
+    if (Settings.IncludeUsingDots) {
+      AddLine("using ...");
+      AddEmptyLine();
+    }
 
     AddLine($"namespace {Settings.Namespace};");
     AddEmptyLine();

@@ -10,6 +10,7 @@ internal class SettingsControl : CanvasComponentBase {
 
   private Settings Settings => GetSettings<Settings>();
 
+  private CheckBox _cbIncludeUsingDots = null!;
   private TextBox _tbNamespace = null!;
   private RadioButton _rbSpaces = null!, _rbTabs = null!;
   private TextBox _tbNumberOfSpaces = null!;
@@ -17,13 +18,15 @@ internal class SettingsControl : CanvasComponentBase {
   private CheckBox _cbUnderscoreAbstract = null!;
 
   protected override void InitializeControls() {
-    _tbNamespace = AddTextBox().TopLeftInPanel();
+    _cbIncludeUsingDots = AddCheckBox("Include using with dots").TopLeftInPanel();
+    _tbNamespace = AddTextBox().Below();
     _rbSpaces = AddRadio("indent", "Spaces").Below();
     _rbTabs = AddRadio("indent", "Tabs").Below();
     _rbNormalBraces = AddRadio("braces", "Normal (Allman)").Below();
     _rbEgyptianBraces = AddRadio("braces", "Egyptian (K&R)").Below();
     _cbUnderscoreAbstract = AddCheckBox("Use underscore for abstract variables").Below();
 
+    InsertLabelLeftOf("Usings:", _cbIncludeUsingDots, LABEL_WIDTH);
     InsertLabelLeftOf("Namespace:", _tbNamespace, LABEL_WIDTH);
     InsertLabelLeftOf("Indent size:", _rbSpaces, LABEL_WIDTH);
     InsertLabelLeftOf("Brace style:", _rbNormalBraces, LABEL_WIDTH);
@@ -60,6 +63,7 @@ internal class SettingsControl : CanvasComponentBase {
   }
 
   private void LoadSettings() {
+    _cbIncludeUsingDots.IsChecked = Settings.IncludeUsingDots;
     _tbNamespace.Text = Settings.Namespace;
     _rbSpaces.IsChecked = Settings.NrOfSpaces > 0;
     _rbTabs.IsChecked = Settings.NrOfSpaces == 0;
@@ -70,6 +74,7 @@ internal class SettingsControl : CanvasComponentBase {
   }
 
   private void SaveSettings() {
+    Settings.IncludeUsingDots = _cbIncludeUsingDots.IsChecked == true;
     Settings.Namespace = _tbNamespace.Text ?? Settings.DEFAULT_NAMESPACE;
     if (!int.TryParse(_tbNumberOfSpaces.Text, out int nrOfSpaces)) {
       nrOfSpaces = Settings.DEFAULT_NR_OF_SPACES;
