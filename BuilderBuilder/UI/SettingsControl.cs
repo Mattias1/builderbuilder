@@ -14,6 +14,7 @@ internal class SettingsControl : CanvasComponentBase {
   private RadioButton _rbSpaces = null!, _rbTabs = null!;
   private TextBox _tbNumberOfSpaces = null!;
   private RadioButton _rbEgyptianBraces = null!, _rbNormalBraces = null!;
+  private CheckBox _cbUnderscoreAbstract = null!;
 
   protected override void InitializeControls() {
     _tbNamespace = AddTextBox().TopLeftInPanel();
@@ -21,10 +22,12 @@ internal class SettingsControl : CanvasComponentBase {
     _rbTabs = AddRadio("indent", "Tabs").Below();
     _rbNormalBraces = AddRadio("braces", "Normal (Allman)").Below();
     _rbEgyptianBraces = AddRadio("braces", "Egyptian (K&R)").Below();
+    _cbUnderscoreAbstract = AddCheckBox("Use underscore for abstract variables").Below();
 
     InsertLabelLeftOf("Namespace:", _tbNamespace, LABEL_WIDTH);
     InsertLabelLeftOf("Indent size:", _rbSpaces, LABEL_WIDTH);
     InsertLabelLeftOf("Brace style:", _rbNormalBraces, LABEL_WIDTH);
+    InsertLabelLeftOf("Naming:", _cbUnderscoreAbstract, LABEL_WIDTH);
     _rbTabs.XAlignLeft(_rbSpaces);
     _rbEgyptianBraces.XAlignLeft(_rbNormalBraces);
 
@@ -63,6 +66,7 @@ internal class SettingsControl : CanvasComponentBase {
     _tbNumberOfSpaces.Text = Settings.NrOfSpaces > 0 ? Settings.NrOfSpaces.ToString() : "";
     _rbNormalBraces.IsChecked = !Settings.EgyptianBracesIndentStyle;
     _rbEgyptianBraces.IsChecked = Settings.EgyptianBracesIndentStyle;
+    _cbUnderscoreAbstract.IsChecked = Settings.UnderscoreAbstract;
   }
 
   private void SaveSettings() {
@@ -72,5 +76,6 @@ internal class SettingsControl : CanvasComponentBase {
     }
     Settings.NrOfSpaces = _rbTabs.IsChecked == true ? 0 : nrOfSpaces;
     Settings.EgyptianBracesIndentStyle = _rbEgyptianBraces.IsChecked == true;
+    Settings.UnderscoreAbstract = _cbUnderscoreAbstract.IsChecked == true;
   }
 }

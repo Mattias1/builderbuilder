@@ -6,6 +6,7 @@ public class Settings {
   public const int DEFAULT_NR_OF_SPACES = 4;
   public const string DEFAULT_NAMESPACE = "<insert namespace>";
   public const bool DEFAULT_USE_EGYPTIAN_BRACES = false;
+  public const bool DEFAULT_UNDERSCORE_ABSTRACT = false;
   public string SelectedFrameworkString { get; set; } = Frameworks.All[0].Slug;
 
   [JsonIgnore]
@@ -22,4 +23,6 @@ public class Settings {
   public string Namespace { get; set; } = DEFAULT_NAMESPACE;
 
   public bool EgyptianBracesIndentStyle { get; set; } = DEFAULT_USE_EGYPTIAN_BRACES;
+
+  public bool UnderscoreAbstract { get; set; } = DEFAULT_UNDERSCORE_ABSTRACT;
 }

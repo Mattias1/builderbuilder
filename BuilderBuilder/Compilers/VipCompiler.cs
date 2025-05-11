@@ -60,24 +60,25 @@ public class VipCompiler : Compiler {
     var type = field.Type;
     var name = field.Name;
     var localVarName = LocalVar(field.Name);
+    var item = AbstractVar("Item");
 
     AddEmptyLine();
 
     AddLine($"public {BuilderClass} With{name}({type} {localVarName})");
     WithBlock(() => {
-      AddLine($"Item.{name} = {localVarName};");
+      AddLine($"{item}.{name} = {localVarName};");
       switch (field.InverseHandling) {
         case Field.InverseHandlingType.OneToOne:
-          AddLine($"{localVarName}.{EntityClass} = Item;");
+          AddLine($"{localVarName}.{EntityClass} = {item};");
           break;
         case Field.InverseHandlingType.ManyToOne:
         case Field.InverseHandlingType.ManyToMany:
-          AddLine($"{localVarName}.{EntityClass}s.Add(Item);");
+          AddLine($"{localVarName}.{EntityClass}s.Add({item});");
           break;
         case Field.InverseHandlingType.OneToMany:
           AddLine($"foreach (var obj in {localVarName})");
           WithBlock(() => {
-            AddLine($"obj.{EntityClass} = Item;");
+            AddLine($"obj.{EntityClass} = {item};");
           });
           break;
       }
@@ -87,11 +88,13 @@ public class VipCompiler : Compiler {
   }
 
   private void AddAutoBuildMethod() {
+    var item = AbstractVar("Item");
+
     AddEmptyLine();
 
     AddLine($"public override {EntityClass} AutoBuild()");
     WithBlock(() => {
-      AddLine("if (Item.Id is null)");
+      AddLine($"if ({item}.Id is null)");
       WithBlock(() => {
         AddLine("WithId(IdGenerator.Next());");
       });

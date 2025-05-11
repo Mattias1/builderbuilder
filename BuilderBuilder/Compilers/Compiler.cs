@@ -86,5 +86,14 @@ public abstract class Compiler {
 
   protected static string PrivateVar(string name) => '_' + LocalVar(name);
 
+  protected string AbstractVar(string name) => (Settings.UnderscoreAbstract ? "_" : "") + PublicVar(name);
+
+  protected static string PublicVar(string name) {
+    if (string.IsNullOrEmpty(name)) {
+      return "";
+    }
+    return char.ToUpperInvariant(name[0]) + name.Substring(1);
+  }
+
   protected static string Nullable(string type) => type.EndsWith("?") ? type : $"{type}?";
 }
