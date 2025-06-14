@@ -29,7 +29,7 @@ public class MutableCompilerTest {
 
                 namespace Example.Test;
 
-                public class ExampleEntityTestHelper
+                public static class ExampleEntityTestHelper
                 {
                     public static ExampleEntityBuilder Builder()
                     {
@@ -125,7 +125,7 @@ public class MutableCompilerTest {
 
                 namespace Example.Test;
 
-                public class ExampleEntityTestHelper
+                public static class ExampleEntityTestHelper
                 {
                     public static ExampleEntityBuilder Builder()
                     {

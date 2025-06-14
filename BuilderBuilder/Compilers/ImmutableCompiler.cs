@@ -41,7 +41,7 @@ public class ImmutableCompiler : Compiler {
       OpenBlock();
     }
 
-    AddLine($"public class {EntityClass}TestHelper");
+    AddLine($"public static class {EntityClass}TestHelper");
     OpenBlock();
   }
 

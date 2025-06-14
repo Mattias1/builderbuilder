@@ -36,7 +36,7 @@ public class MutableCompiler : Compiler {
       OpenBlock();
     }
 
-    AddLine($"public class {EntityClass}TestHelper");
+    AddLine($"public static class {EntityClass}TestHelper");
     OpenBlock();
   }
 

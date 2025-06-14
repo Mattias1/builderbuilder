@@ -33,7 +33,7 @@ public class ImmutableCompilerTest {
 
       namespace ExampleProject.Test.TestHelpers;
 
-      public class ExampleEntityTestHelper {
+      public static class ExampleEntityTestHelper {
         public static ExampleEntityBuilder Builder() {
           return new ExampleEntityBuilder();
         }
