@@ -6,7 +6,7 @@ using BuilderBuilder.UI;
 namespace BuilderBuilder;
 
 internal static class Program {
-  private static readonly Size MIN_SIZE = new(350, 200);
+  private static readonly Size MIN_SIZE = new(450, 200);
   private static readonly Size DEFAULT_SIZE = new(700, 450);
 
   private static void Main(string[] args) {

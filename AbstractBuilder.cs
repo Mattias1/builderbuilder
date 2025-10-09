@@ -1,4 +1,6 @@
-﻿namespace VipLive.Test.Basics.TestHelpers
+﻿using System;
+
+namespace Test.Basics.TestHelpers
 {
     public interface IAbstractBuilder<out T>
     {
@@ -15,7 +17,7 @@
 
         public virtual T Build() => Item;
 
-        private TBuilder WithOut<TVar, TBuilder>(Func<TVar, TBuilder> buildFunc, TVar inVar, out TVar outVar)
+        protected TBuilder WithOut<TVar, TBuilder>(Func<TVar, TBuilder> buildFunc, TVar inVar, out TVar outVar)
         {
             outVar = inVar;
             return buildFunc(inVar);

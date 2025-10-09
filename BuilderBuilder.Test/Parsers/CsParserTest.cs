@@ -55,16 +55,16 @@ public class CsParserTest : CsParser {
 
   [Fact]
   public void IsAttribute_First() {
-    var line = "  [ question(answer = 42) , test ]  ";
-    var pattern = "question";
+    var line = "  [ first(thingy = 42) , second ]  ";
+    var pattern = "first";
     var result = IsAttribute(line, pattern);
     Assert.True(result);
   }
 
   [Fact]
   public void IsAttribute_Second() {
-    var line = "  [ question(answer = 42) , test ]  ";
-    var pattern = "test";
+    var line = "  [ first(thingy = 42) , second ]  ";
+    var pattern = "second";
     var result = IsAttribute(line, pattern);
     Assert.True(result);
   }
@@ -127,6 +127,13 @@ public class CsParserTest : CsParser {
     var line = "public class MyClass";
     var result = ParsePublicField(line);
     Assert.Null(result);
+  }
+
+  [Fact]
+  public void ParsePublicField_IfTypeWithDot_ThenNotNull() {
+    var line = "public System.String MyProperty { get; set; }";
+    var result = ParsePublicField(line);
+    Assert.NotNull(result);
   }
 
   [Fact]

@@ -8,9 +8,10 @@ public static class Frameworks {
   private static Framework[]? _frameworks;
 
   public static Framework[] All => _frameworks ??= [
-      new("C# NHibernate", "CsNhibernate", new NhibernateParser(), new MutableCompiler()),
       new("Plain C# class", "PlainCsClass", new PlainCsClassParser(), new MutableCompiler()),
-      new("C# immutable", "Immutable", new ImmutableParser(), new ImmutableCompiler())
+      new("Plain C# entity", "PlainCsEntity", new PlainCsClassParser(forcePersistable: true), new MutableCompiler()),
+      new("C# immutable", "Immutable", new ImmutableParser(), new ImmutableCompiler()),
+      new("C# NHibernate", "CsNhibernate", new NhibernateParser(), new MutableCompiler())
   ];
 
   public static Framework FromSlug(string slug) {

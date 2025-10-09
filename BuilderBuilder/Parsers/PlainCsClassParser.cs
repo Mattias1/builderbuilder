@@ -1,10 +1,10 @@
 ﻿namespace BuilderBuilder.Parsers;
 
-public class PlainCsClassParser : CsParser {
+public class PlainCsClassParser(bool forcePersistable = false) : CsParser {
   private BuilderEntity _result = null!;
 
   public override BuilderEntity Parse(string[] lines) {
-    _result = new BuilderEntity(persistable: false);
+    _result = new BuilderEntity(persistable: forcePersistable);
 
     foreach (var line in lines) {
       ParseName(line);

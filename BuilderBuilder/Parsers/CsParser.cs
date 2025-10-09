@@ -2,7 +2,7 @@
 
 public abstract class CsParser : Parser {
   private const string AttributeInside = @"\s*[a-zA-Z_].*";
-  private const string Type = @"[a-zA-Z0-9_<>?]";
+  private const string Type = @"[a-zA-Z0-9_<>\.?]";
 
   protected bool IsAttributeLine(string line) {
     return MatchesPattern(line, $@"^\s*\[{AttributeInside}\]");
