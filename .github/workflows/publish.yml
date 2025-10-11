@@ -1,0 +1,46 @@
+name: BuilderBuilder release pipeline
+
+on:
+  push:
+    tags: [ v* ]
+
+jobs:
+  publish:
+    name: Publish release
+    permissions: write-all
+    runs-on: ubuntu-latest
+
+    steps:
+      # Build & Test
+      - uses: actions/checkout@v3
+
+      - name: Setup dotnet sdk
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore backend dependencies
+        run: dotnet restore
+      - name: Build backend
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-restore --verbosity normal
+
+      # Extract version number (v1.2.3) from the tag (refs/tags/v1.2.3)
+      - name: Extract version number
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Build release
+        run: ./build-release.sh
+      - name: Zip built files
+        run: |
+          cd BuilderBuilder/
+          find . -maxdepth 1 -mindepth 1 -type d -name "publish-*" -exec ../zip-release.sh {} $RELEASE_VERSION \;
+          cd ../
+      - name: Publish github release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          gh release create
+          $RELEASE_VERSION
+          BuilderBuilder/publish-*/*.zip
+          --title "Release ${RELEASE_VERSION}"
